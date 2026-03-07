@@ -1,282 +1,362 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🍞 빵집별 영양성분표</title>
-
+<title>🍞 빵 영양성분</title>
 <style>
 
 body{
-font-family:sans-serif;
 margin:0;
-background:linear-gradient(#fff8f0,#f1e2d2);
+font-family:'Pretendard',sans-serif;
+background:linear-gradient(#f9f4ef,#efe2d3);
 }
 
 header{
 text-align:center;
-padding:20px;
 font-size:28px;
 font-weight:bold;
-}
-
-.controls{
-display:flex;
-gap:10px;
-justify-content:center;
-flex-wrap:wrap;
-margin-bottom:20px;
-}
-
-select,input{
-padding:10px;
-border-radius:10px;
-border:1px solid #ccc;
-font-size:16px;
+padding:20px;
 }
 
 .container{
-max-width:700px;
+max-width:720px;
 margin:auto;
-padding:10px;
+padding:15px;
 }
 
 .card{
 background:white;
-padding:15px;
-border-radius:15px;
-margin-bottom:15px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
-
-.card img{
-width:100%;
-border-radius:10px;
-margin-bottom:10px;
-}
-
-.favorite{
+padding:16px;
+margin-bottom:12px;
+border-radius:14px;
+box-shadow:0 5px 12px rgba(0,0,0,0.08);
 cursor:pointer;
-float:right;
-font-size:22px;
+transition:0.2s;
 }
 
-.nutrition{
-font-size:14px;
-color:#444;
-margin-top:5px;
+.card:hover{
+transform:translateY(-3px);
 }
 
-.addBox{
-max-width:700px;
-margin:auto;
-padding:20px;
-background:white;
-border-radius:15px;
-margin-top:30px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
 }
 
-.addBox input{
+.search{
 width:100%;
-margin-bottom:10px;
-}
-
-.card img{
-width:100%;
-height:200px;
-object-fit:cover;
-border-radius:10px;
-margin-bottom:10px;
-}
-
-button{
 padding:10px;
-border:none;
+margin-bottom:15px;
 border-radius:10px;
+border:1px solid #ddd;
+font-size:15px;
+}
+
+.detail{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 5px 12px rgba(0,0,0,0.08);
+}
+
+.back{
+margin-bottom:15px;
 background:#ffb84d;
-font-size:16px;
+border:none;
+padding:8px 12px;
+border-radius:8px;
 cursor:pointer;
+}
+
+.category{
+background:#fff3e0;
+padding:10px;
+border-radius:10px;
+text-align:center;
+font-weight:500;
 }
 
 </style>
 </head>
-
 <body>
 
-<header>🍞 빵집별 영양성분표</header>
-
-<div class="controls">
-
-<select id="bakerySelect" onchange="renderList()">
-<option value="전체">전체 빵집</option>
-<option value="파리바게뜨">파리바게뜨</option>
-<option value="뚜레쥬르">뚜레쥬르</option>
-<option value="개인베이커리">개인베이커리</option>
-<option value="내가추가">내가추가</option>
-</select>
-
-<input
-type="text"
-placeholder="빵 검색 🔍"
-id="searchInput"
-oninput="renderList()"
-/>
-
-</div>
-
-<div class="container" id="breadList"></div>
-
-<div class="addBox">
-
-<h3>➕ 빵 추가</h3>
-
-<input id="newName" placeholder="빵 이름">
-
-<input id="newImage" placeholder="빵 사진 URL">
-
-<input id="newKcal" placeholder="칼로리">
-
-<input id="newCarb" placeholder="탄수화물">
-
-<input id="newProtein" placeholder="단백질">
-
-<input id="newFat" placeholder="지방">
-
-<button onclick="addBread()">추가하기</button>
-
-</div>
-
+<header>🍞 빵 영양성분 사전</header>
+<div class="container" id="app"></div>
 <script>
 
-const breads = [
+const bakeries = {
 
-{
-bakery:"파리바게뜨",
-name:"크루아상",image:"https://images.unsplash.com/photo-1555507036-ab794f57584a",
-kcal:270,
-carb:30,
-protein:6,
-fat:14,
-sugar:5,
-sodium:220
-},
+"파리바게뜨":{
 
+"식빵":[
 {
-bakery:"뚜레쥬르",
 name:"우유식빵",
-image:"https://images.unsplash.com/photo-1608198093002-ad4e005484ec",
-kcal:210,
-carb:38,
-protein:7,
-fat:4,
-sugar:6,
-sodium:250
+amount:"100g",
+kcal:"210kcal",
+sodium:"260mg",
+sugar:"7g",
+fat:"3g",
+protein:"7g",
+allergy:"밀, 우유"
+}
+],
+
+"간식빵":[
+{
+name:"소보로빵",
+amount:"85g",
+kcal:"310kcal",
+sodium:"280mg",
+sugar:"12g",
+fat:"10g",
+protein:"6g",
+allergy:"밀, 우유, 계란"
+}
+],
+
+"건강빵":[
+{
+name:"호밀빵",
+amount:"90g",
+kcal:"190kcal",
+sodium:"200mg",
+sugar:"3g",
+fat:"2g",
+protein:"6g",
+allergy:"밀"
+}
+],
+
+"도넛":[
+{
+name:"슈가도넛",
+amount:"75g",
+kcal:"320kcal",
+sodium:"250mg",
+sugar:"15g",
+fat:"12g",
+protein:"5g",
+allergy:"밀, 우유, 계란"
+}
+],
+
+"페스츄리":[
+{
+name:"프렌치 크라상",
+amount:"70g",
+kcal:"240kcal",
+sodium:"230mg",
+sugar:"6g",
+fat:"8g",
+protein:"5g",
+allergy:"밀, 우유, 계란"
+}
+]
+
 },
 
+"뚜레쥬르":{
+
+"식빵":[
 {
-bakery:"개인베이커리",
-name:"마카롱",
-image:"https://images.unsplash.com/photo-1569864358642-9d1684040f43",
-kcal:150,
-carb:18,
-protein:3,
-fat:7,
-sugar:14,
-sodium:40
+name:"우유식빵",
+amount:"100g",
+kcal:"210kcal",
+sodium:"250mg",
+sugar:"7g",
+fat:"3g",
+protein:"7g",
+allergy:"밀, 우유"
+}
+],
+
+"간식빵":[
+{
+name:"단팥빵",
+amount:"90g",
+kcal:"300kcal",
+sodium:"270mg",
+sugar:"13g",
+fat:"8g",
+protein:"6g",
+allergy:"밀, 우유"
+}
+],
+
+"건강빵":[
+{
+name:"통밀빵",
+amount:"95g",
+kcal:"200kcal",
+sodium:"210mg",
+sugar:"4g",
+fat:"3g",
+protein:"7g",
+allergy:"밀"
+}
+],
+
+"도넛":[
+{
+name:"초코도넛",
+amount:"80g",
+kcal:"330kcal",
+sodium:"260mg",
+sugar:"16g",
+fat:"14g",
+protein:"5g",
+allergy:"밀, 우유, 계란"
+}
+],
+
+"페스츄리":[
+{
+name:"버터크라상",
+amount:"70g",
+kcal:"250kcal",
+sodium:"230mg",
+sugar:"6g",
+fat:"9g",
+protein:"5g",
+allergy:"밀, 우유, 계란"
+}
+]
+
 }
 
-];
+};
 
-let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+let currentBakery=null;
+let currentCategory=null;
 
-function renderList(){
+function showBakeries(){
 
-const bakery = document.getElementById("bakerySelect").value;
-const search = document.getElementById("searchInput").value.toLowerCase();
-const list = document.getElementById("breadList");
+const app=document.getElementById("app");
 
-list.innerHTML="";
+app.innerHTML="";
 
-breads
-.filter(b => bakery==="전체" || b.bakery===bakery)
-.filter(b => b.name.toLowerCase().includes(search))
-.forEach(b=>{
+Object.keys(bakeries).forEach(b=>{
 
-const fav = favorites.includes(b.name) ? "⭐" : "☆";
-
-const div = document.createElement("div");
+const div=document.createElement("div");
 
 div.className="card";
 
-div.innerHTML=`
+div.innerText=b;
 
-<span class="favorite" onclick="toggleFavorite('${b.name}')">${fav}</span>
+div.onclick=()=>showCategories(b);
 
-<img src="${b.image}">
+app.appendChild(div);
 
-<h3>${b.name}</h3>
+});
 
-<div>${b.bakery}</div>
+}
 
-<div><b>${b.kcal} kcal</b></div>
+function showCategories(bakery){
 
-<div class="nutrition">
-탄수화물 ${b.carb}g |
-단백질 ${b.protein}g |
-지방 ${b.fat}g
-</div>
+currentBakery=bakery;
 
+const app=document.getElementById("app");
+
+app.innerHTML=`
+<button class="back" onclick="showBakeries()">← 뒤로</button>
+<div class="grid" id="cat"></div>
 `;
 
-list.appendChild(div);
+const cat=document.getElementById("cat");
+
+Object.keys(bakeries[bakery]).forEach(c=>{
+
+const div=document.createElement("div");
+
+div.className="category";
+
+div.innerText=c;
+
+div.onclick=()=>showBreads(c);
+
+cat.appendChild(div);
 
 });
 
 }
 
-function toggleFavorite(name){
+function showBreads(category){
 
-if(favorites.includes(name)){
-favorites = favorites.filter(f => f!==name);
-}else{
-favorites.push(name);
+currentCategory=category;
+
+const app=document.getElementById("app");
+
+app.innerHTML=`
+<button class="back" onclick="showCategories('${currentBakery}')">← 뒤로</button>
+<input class="search" placeholder="빵 검색" oninput="searchBread(this.value)">
+<div id="breadList"></div>
+`;
+
+renderBreadList(bakeries[currentBakery][category]);
+
 }
 
-localStorage.setItem("favorites", JSON.stringify(favorites));
+function renderBreadList(list){
 
-renderList();
+const breadList=document.getElementById("breadList");
 
-}
+breadList.innerHTML="";
 
-function addBread(){
+list.forEach(b=>{
 
-const name = document.getElementById("newName").value;
-const image = document.getElementById("newImage").value;
-const kcal = document.getElementById("newKcal").value;
-const carb = document.getElementById("newCarb").value;
-const protein = document.getElementById("newProtein").value;
-const fat = document.getElementById("newFat").value;
+const div=document.createElement("div");
 
-breads.push({
-bakery:"내가추가",
-name:name,
-image:image,
-kcal:kcal,
-carb:carb,
-protein:protein,
-fat:fat,
-sugar:0,
-sodium:0
+div.className="card";
+
+div.innerText=b.name;
+
+div.onclick=()=>showDetail(b);
+
+breadList.appendChild(div);
+
 });
 
-renderList();
+}
+
+function searchBread(text){
+
+const list=bakeries[currentBakery][currentCategory].filter(b=>
+b.name.includes(text)
+);
+
+renderBreadList(list);
 
 }
 
-renderList();
+function showDetail(b){
+
+const app=document.getElementById("app");
+
+app.innerHTML=`
+
+<button class="back" onclick="showBreads('${currentCategory}')">← 뒤로</button>
+
+<div class="detail">
+
+<h2>${b.name}</h2>
+
+<p><b>내용량</b> : ${b.amount}</p>
+<p><b>칼로리</b> : ${b.kcal}</p>
+<p><b>나트륨</b> : ${b.sodium}</p>
+<p><b>당류</b> : ${b.sugar}</p>
+<p><b>포화지방</b> : ${b.fat}</p>
+<p><b>단백질</b> : ${b.protein}</p>
+<p><b>알레르기 정보</b> : ${b.allergy}</p>
+
+</div>
+`;
+
+}
+
+showBakeries();
 
 </script>
-
 </body>
-</html>
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
