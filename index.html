@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍞 빵 칼로리 모음집</title>
+
+<style>
+
+body{
+font-family:sans-serif;
+margin:0;
+background:linear-gradient(#fff8f0,#f1e2d2);
+}
+
+header{
+text-align:center;
+padding:20px;
+font-size:28px;
+font-weight:bold;
+}
+
+.controls{
+display:flex;
+gap:10px;
+justify-content:center;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+select,input{
+padding:10px;
+border-radius:10px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+padding:10px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:15px;
+margin-bottom:15px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card h3{
+margin:0 0 5px 0;
+}
+
+.favorite{
+cursor:pointer;
+float:right;
+font-size:20px;
+}
+
+.nutrition{
+font-size:14px;
+color:#444;
+margin-top:5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>🍞 빵 칼로리 모음집</header>
+
+<div class="controls">
+
+<select id="bakerySelect" onchange="renderList()">
+<option value="전체">전체 빵집</option>
+<option value="파리바게뜨">파리바게뜨</option>
+<option value="뚜레쥬르">뚜레쥬르</option>
+<option value="개인베이커리">개인베이커리</option>
+</select>
+
+<input
+type="text"
+placeholder="빵 검색 🔍"
+id="searchInput"
+oninput="renderList()"
+/>
+
+</div>
+
+<div class="container" id="breadList"></div>
+
+<script>
+
+const breads = [
+
+{
+bakery:"파리바게뜨",
+name:"크루아상",
+kcal:270,
+carb:30,
+protein:6,
+fat:14,
+sugar:5,
+sodium:220
+},
+
+{
+bakery:"파리바게뜨",
+name:"초코머핀",
+kcal:340,
+carb:45,
+protein:5,
+fat:16,
+sugar:22,
+sodium:180
+},
+
+{
+bakery:"뚜레쥬르",
+name:"우유식빵",
+kcal:210,
+carb:38,
+protein:7,
+fat:4,
+sugar:6,
+sodium:250
+},
+
+{
+bakery:"뚜레쥬르",
+name:"치즈케이크",
+kcal:380,
+carb:32,
+protein:7,
+fat:22,
+sugar:24,
+sodium:200
+},
+
+{
+bakery:"개인베이커리",
+name:"마카롱",
+kcal:150,
+carb:18,
+protein:3,
+fat:7,
+sugar:14,
+sodium:40
+},
+
+{
+bakery:"개인베이커리",
+name:"버터쿠키",
+kcal:190,
+carb:20,
+protein:2,
+fat:10,
+sugar:8,
+sodium:90
+}
+
+];
+
+let favorites = [];
+
+function renderList(){
+
+const bakery = document.getElementById("bakerySelect").value;
+const search = document.getElementById("searchInput").value.toLowerCase();
+const list = document.getElementById("breadList");
+
+list.innerHTML="";
+
+breads
+.filter(b => bakery==="전체" || b.bakery===bakery)
+.filter(b => b.name.toLowerCase().includes(search))
+.forEach(b=>{
+
+const fav = favorites.includes(b.name) ? "⭐" : "☆";
+
+const div = document.createElement("div");
+
+div.className="card";
+
+div.innerHTML=`
+
+<span class="favorite" onclick="toggleFavorite('${b.name}')">${fav}</span>
+
+<h3>${b.name}</h3>
+
+<div>${b.bakery}</div>
+
+<div><b>${b.kcal} kcal</b></div>
+
+<div class="nutrition">
+탄수화물 ${b.carb}g |
+단백질 ${b.protein}g |
+지방 ${b.fat}g <br>
+당류 ${b.sugar}g |
+나트륨 ${b.sodium}mg
+</div>
+
+`;
+
+list.appendChild(div);
+
+});
+
+}
+
+function toggleFavorite(name){
+
+if(favorites.includes(name)){
+favorites = favorites.filter(f => f!==name);
+}else{
+favorites.push(name);
+}
+
+renderList();
+
+}
+
+renderList();
+
+</script>
+
+</body>
+</html>
