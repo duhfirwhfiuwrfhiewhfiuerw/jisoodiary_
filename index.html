@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🍞 빵 칼로리 모음집</title>
+<title>🍞 빵집별 영양성분표</title>
 
 <style>
 
@@ -49,14 +49,16 @@ margin-bottom:15px;
 box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
-.card h3{
-margin:0 0 5px 0;
+.card img{
+width:100%;
+border-radius:10px;
+margin-bottom:10px;
 }
 
 .favorite{
 cursor:pointer;
 float:right;
-font-size:20px;
+font-size:22px;
 }
 
 .nutrition{
@@ -65,12 +67,36 @@ color:#444;
 margin-top:5px;
 }
 
+.addBox{
+max-width:700px;
+margin:auto;
+padding:20px;
+background:white;
+border-radius:15px;
+margin-top:30px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.addBox input{
+width:100%;
+margin-bottom:10px;
+}
+
+button{
+padding:10px;
+border:none;
+border-radius:10px;
+background:#ffb84d;
+font-size:16px;
+cursor:pointer;
+}
+
 </style>
 </head>
 
 <body>
 
-<header>🍞 빵 칼로리 모음집</header>
+<header>🍞 빵집별 영양성분표</header>
 
 <div class="controls">
 
@@ -79,6 +105,7 @@ margin-top:5px;
 <option value="파리바게뜨">파리바게뜨</option>
 <option value="뚜레쥬르">뚜레쥬르</option>
 <option value="개인베이커리">개인베이커리</option>
+<option value="내가추가">내가추가</option>
 </select>
 
 <input
@@ -92,6 +119,26 @@ oninput="renderList()"
 
 <div class="container" id="breadList"></div>
 
+<div class="addBox">
+
+<h3>➕ 빵 추가</h3>
+
+<input id="newName" placeholder="빵 이름">
+
+<input id="newImage" placeholder="빵 사진 URL">
+
+<input id="newKcal" placeholder="칼로리">
+
+<input id="newCarb" placeholder="탄수화물">
+
+<input id="newProtein" placeholder="단백질">
+
+<input id="newFat" placeholder="지방">
+
+<button onclick="addBread()">추가하기</button>
+
+</div>
+
 <script>
 
 const breads = [
@@ -99,6 +146,7 @@ const breads = [
 {
 bakery:"파리바게뜨",
 name:"크루아상",
+image:"https://upload.wikimedia.org/wikipedia/commons/6/6c/Croissant-Petr_Kratochvil.jpg",
 kcal:270,
 carb:30,
 protein:6,
@@ -108,19 +156,9 @@ sodium:220
 },
 
 {
-bakery:"파리바게뜨",
-name:"초코머핀",
-kcal:340,
-carb:45,
-protein:5,
-fat:16,
-sugar:22,
-sodium:180
-},
-
-{
 bakery:"뚜레쥬르",
 name:"우유식빵",
+image:"https://upload.wikimedia.org/wikipedia/commons/0/0b/White_bread.jpg",
 kcal:210,
 carb:38,
 protein:7,
@@ -130,41 +168,20 @@ sodium:250
 },
 
 {
-bakery:"뚜레쥬르",
-name:"치즈케이크",
-kcal:380,
-carb:32,
-protein:7,
-fat:22,
-sugar:24,
-sodium:200
-},
-
-{
 bakery:"개인베이커리",
 name:"마카롱",
+image:"https://upload.wikimedia.org/wikipedia/commons/0/0c/Macarons.jpg",
 kcal:150,
 carb:18,
 protein:3,
 fat:7,
 sugar:14,
 sodium:40
-},
-
-{
-bakery:"개인베이커리",
-name:"버터쿠키",
-kcal:190,
-carb:20,
-protein:2,
-fat:10,
-sugar:8,
-sodium:90
 }
 
 ];
 
-let favorites = [];
+let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
 function renderList(){
 
@@ -189,6 +206,8 @@ div.innerHTML=`
 
 <span class="favorite" onclick="toggleFavorite('${b.name}')">${fav}</span>
 
+<img src="${b.image}">
+
 <h3>${b.name}</h3>
 
 <div>${b.bakery}</div>
@@ -198,9 +217,7 @@ div.innerHTML=`
 <div class="nutrition">
 탄수화물 ${b.carb}g |
 단백질 ${b.protein}g |
-지방 ${b.fat}g <br>
-당류 ${b.sugar}g |
-나트륨 ${b.sodium}mg
+지방 ${b.fat}g
 </div>
 
 `;
@@ -218,6 +235,33 @@ favorites = favorites.filter(f => f!==name);
 }else{
 favorites.push(name);
 }
+
+localStorage.setItem("favorites", JSON.stringify(favorites));
+
+renderList();
+
+}
+
+function addBread(){
+
+const name = document.getElementById("newName").value;
+const image = document.getElementById("newImage").value;
+const kcal = document.getElementById("newKcal").value;
+const carb = document.getElementById("newCarb").value;
+const protein = document.getElementById("newProtein").value;
+const fat = document.getElementById("newFat").value;
+
+breads.push({
+bakery:"내가추가",
+name:name,
+image:image,
+kcal:kcal,
+carb:carb,
+protein:protein,
+fat:fat,
+sugar:0,
+sodium:0
+});
 
 renderList();
 
