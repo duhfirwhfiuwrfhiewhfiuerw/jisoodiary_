@@ -1,22 +1,49 @@
 <!DOCTYPE html>
-<html lang="ko"
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🍞 빵 영양성분</title>
+<title>🍞 빵 영양성분 사전</title>
 <style>
 
 body{
 margin:0;
 font-family:'Pretendard',sans-serif;
-background:linear-gradient(#f9f4ef,#efe2d3);
+background:linear-gradient(#fff6e9,#f3e2c7);
+color:#3a2b1c;
+transition:0.3s;
+}
+
+.dark{
+background:#1e1e1e;
+color:white;
 }
 
 header{
 text-align:center;
+padding:20px;
 font-size:28px;
 font-weight:bold;
-padding:20px;
+}
+
+.topbar{
+display:flex;
+justify-content:center;
+gap:10px;
+margin-bottom:10px;
+}
+
+button{
+border:none;
+border-radius:20px;
+padding:8px 14px;
+background:#ffb347;
+cursor:pointer;
+font-weight:600;
+}
+
+button:hover{
+opacity:0.8;
 }
 
 .container{
@@ -25,74 +52,89 @@ margin:auto;
 padding:15px;
 }
 
-.card{
-background:white;
-padding:16px;
-margin-bottom:12px;
-border-radius:14px;
-box-shadow:0 5px 12px rgba(0,0,0,0.08);
-cursor:pointer;
-transition:0.2s;
-}
-
-.card:hover{
-transform:translateY(-3px);
-}
-
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
+gap:12px;
+}
+
+.card{
+background:white;
+border-radius:16px;
+padding:14px;
+box-shadow:0 6px 14px rgba(0,0,0,0.1);
+cursor:pointer;
+transition:0.2s;
+text-align:center;
+}
+
+.card:hover{
+transform:translateY(-4px);
+}
+
+.card img{
+width:100%;
+height:120px;
+object-fit:cover;
+border-radius:12px;
+margin-bottom:8px;
+}
+
+.dark .card{
+background:#2b2b2b;
 }
 
 .search{
 width:100%;
 padding:10px;
-margin-bottom:15px;
-border-radius:10px;
+border-radius:12px;
 border:1px solid #ddd;
-font-size:15px;
+margin-bottom:14px;
 }
 
 .detail{
 background:white;
 padding:20px;
-border-radius:15px;
-box-shadow:0 5px 12px rgba(0,0,0,0.08);
+border-radius:16px;
+box-shadow:0 6px 14px rgba(0,0,0,0.1);
+}
+
+.dark .detail{
+background:#2b2b2b;
 }
 
 .back{
-margin-bottom:15px;
-background:#ffb84d;
-border:none;
-padding:8px 12px;
-border-radius:8px;
-cursor:pointer;
+margin-bottom:14px;
+background:#ff9966;
 }
 
-.category{
-background:#fff3e0;
-padding:10px;
-border-radius:10px;
-text-align:center;
-font-weight:500;
+.musicFrame{
+display:none;
 }
 
 </style>
 </head>
 <body>
-
 <header>🍞 빵 영양성분 사전</header>
+<div class="topbar">
+<button onclick="toggleDark()">🌙 다크모드</button>
+<button onclick="toggleMusic()">🎵 브금</button>
+</div>
+<iframe class="musicFrame" id="music"
+src="https://www.youtube.com/embed/4xDzrJKXOOY?autoplay=1&loop=1"
+allow="autoplay">
+</iframe>
 <div class="container" id="app"></div>
 <script>
 
-const bakeries = {
+const bakeries={
 
 "파리바게뜨":{
 
 "식빵":[
 {
 name:"우유식빵",
+img:"https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=600",
 amount:"100g",
 kcal:"210kcal",
 sodium:"260mg",
@@ -106,6 +148,7 @@ allergy:"밀, 우유"
 "간식빵":[
 {
 name:"소보로빵",
+img:"https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600",
 amount:"85g",
 kcal:"310kcal",
 sodium:"280mg",
@@ -119,6 +162,7 @@ allergy:"밀, 우유, 계란"
 "건강빵":[
 {
 name:"호밀빵",
+img:"https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=600",
 amount:"90g",
 kcal:"190kcal",
 sodium:"200mg",
@@ -132,6 +176,7 @@ allergy:"밀"
 "도넛":[
 {
 name:"슈가도넛",
+img:"https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600",
 amount:"75g",
 kcal:"320kcal",
 sodium:"250mg",
@@ -145,6 +190,7 @@ allergy:"밀, 우유, 계란"
 "페스츄리":[
 {
 name:"프렌치 크라상",
+img:"https://images.unsplash.com/photo-1555507036-ab794f57584a?w=600",
 amount:"70g",
 kcal:"240kcal",
 sodium:"230mg",
@@ -162,6 +208,7 @@ allergy:"밀, 우유, 계란"
 "식빵":[
 {
 name:"우유식빵",
+img:"https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=600",
 amount:"100g",
 kcal:"210kcal",
 sodium:"250mg",
@@ -175,6 +222,7 @@ allergy:"밀, 우유"
 "간식빵":[
 {
 name:"단팥빵",
+img:"https://images.unsplash.com/photo-1599785209707-a456fc1337bb?w=600",
 amount:"90g",
 kcal:"300kcal",
 sodium:"270mg",
@@ -182,45 +230,6 @@ sugar:"13g",
 fat:"8g",
 protein:"6g",
 allergy:"밀, 우유"
-}
-],
-
-"건강빵":[
-{
-name:"통밀빵",
-amount:"95g",
-kcal:"200kcal",
-sodium:"210mg",
-sugar:"4g",
-fat:"3g",
-protein:"7g",
-allergy:"밀"
-}
-],
-
-"도넛":[
-{
-name:"초코도넛",
-amount:"80g",
-kcal:"330kcal",
-sodium:"260mg",
-sugar:"16g",
-fat:"14g",
-protein:"5g",
-allergy:"밀, 우유, 계란"
-}
-],
-
-"페스츄리":[
-{
-name:"버터크라상",
-amount:"70g",
-kcal:"250kcal",
-sodium:"230mg",
-sugar:"6g",
-fat:"9g",
-protein:"5g",
-allergy:"밀, 우유, 계란"
 }
 ]
 
@@ -234,16 +243,14 @@ let currentCategory=null;
 function showBakeries(){
 
 const app=document.getElementById("app");
-
 app.innerHTML="";
 
 Object.keys(bakeries).forEach(b=>{
 
 const div=document.createElement("div");
-
 div.className="card";
 
-div.innerText=b;
+div.innerHTML=`<h3>${b}</h3>`;
 
 div.onclick=()=>showCategories(b);
 
@@ -253,27 +260,22 @@ app.appendChild(div);
 
 }
 
-function showCategories(bakery){
+function showCategories(b){
 
-currentBakery=bakery;
+currentBakery=b;
 
 const app=document.getElementById("app");
 
-app.innerHTML=`
-<button class="back" onclick="showBakeries()">← 뒤로</button>
-<div class="grid" id="cat"></div>
-`;
+app.innerHTML=`<button class="back" onclick="showBakeries()">⬅ 뒤로</button>
+<div class="grid" id="cat"></div>`;
 
 const cat=document.getElementById("cat");
 
-Object.keys(bakeries[bakery]).forEach(c=>{
+Object.keys(bakeries[b]).forEach(c=>{
 
 const div=document.createElement("div");
-
-div.className="category";
-
-div.innerText=c;
-
+div.className="card";
+div.innerHTML=`<h3>${c}</h3>`;
 div.onclick=()=>showBreads(c);
 
 cat.appendChild(div);
@@ -282,35 +284,36 @@ cat.appendChild(div);
 
 }
 
-function showBreads(category){
+function showBreads(c){
 
-currentCategory=category;
+currentCategory=c;
 
 const app=document.getElementById("app");
 
 app.innerHTML=`
-<button class="back" onclick="showCategories('${currentBakery}')">← 뒤로</button>
+<button class="back" onclick="showCategories('${currentBakery}')">⬅ 뒤로</button>
 <input class="search" placeholder="빵 검색" oninput="searchBread(this.value)">
-<div id="breadList"></div>
+<div class="grid" id="breadList"></div>
 `;
 
-renderBreadList(bakeries[currentBakery][category]);
+renderBreadList(bakeries[currentBakery][c]);
 
 }
 
 function renderBreadList(list){
 
 const breadList=document.getElementById("breadList");
-
 breadList.innerHTML="";
 
 list.forEach(b=>{
 
 const div=document.createElement("div");
-
 div.className="card";
 
-div.innerText=b.name;
+div.innerHTML=`
+<img src="${b.img}">
+<b>${b.name}</b>
+`;
 
 div.onclick=()=>showDetail(b);
 
@@ -322,9 +325,8 @@ breadList.appendChild(div);
 
 function searchBread(text){
 
-const list=bakeries[currentBakery][currentCategory].filter(b=>
-b.name.includes(text)
-);
+const list=bakeries[currentBakery][currentCategory]
+.filter(b=>b.name.includes(text));
 
 renderBreadList(list);
 
@@ -335,8 +337,7 @@ function showDetail(b){
 const app=document.getElementById("app");
 
 app.innerHTML=`
-
-<button class="back" onclick="showBreads('${currentCategory}')">← 뒤로</button>
+<button class="back" onclick="showBreads('${currentCategory}')">⬅ 뒤로</button>
 
 <div class="detail">
 
@@ -348,10 +349,26 @@ app.innerHTML=`
 <p><b>당류</b> : ${b.sugar}</p>
 <p><b>포화지방</b> : ${b.fat}</p>
 <p><b>단백질</b> : ${b.protein}</p>
-<p><b>알레르기 정보</b> : ${b.allergy}</p>
+<p><b>알레르기</b> : ${b.allergy}</p>
 
 </div>
 `;
+
+}
+
+function toggleDark(){
+document.body.classList.toggle("dark");
+}
+
+let musicOn=false;
+
+function toggleMusic(){
+
+const music=document.getElementById("music");
+
+musicOn=!musicOn;
+
+music.style.display=musicOn?"block":"none";
 
 }
 
@@ -359,4 +376,4 @@ showBakeries();
 
 </script>
 </body>
-</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+</html>
