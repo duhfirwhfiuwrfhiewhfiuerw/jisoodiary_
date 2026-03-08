@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🍞 빵 영양성분 사전</title>
+<title>🍞 빵 영양성분 앱</title>
 <style>
 
 body{
 margin:0;
 font-family:'Pretendard',sans-serif;
-background:linear-gradient(#fff6e9,#f3e2c7);
-color:#3a2b1c;
-transition:0.3s;
+background:linear-gradient(#ffd6e7,#ffeaf3);
+color:#6b2c4a;
+overflow-x:hidden;
 }
 
 .dark{
@@ -22,29 +22,36 @@ color:white;
 header{
 text-align:center;
 padding:20px;
-font-size:28px;
+font-size:30px;
 font-weight:bold;
+color:#ff4f93;
 }
+
+/* 상단 버튼 */
 
 .topbar{
 display:flex;
 justify-content:center;
 gap:10px;
-margin-bottom:10px;
+margin-bottom:15px;
 }
 
 button{
 border:none;
-border-radius:20px;
-padding:8px 14px;
-background:#ffb347;
+padding:10px 16px;
+border-radius:25px;
+background:#ff9ec7;
+color:white;
+font-weight:bold;
 cursor:pointer;
-font-weight:600;
+box-shadow:0 4px 10px rgba(0,0,0,0.15);
 }
 
 button:hover{
-opacity:0.8;
+transform:scale(1.05);
 }
+
+/* 컨테이너 */
 
 .container{
 max-width:720px;
@@ -52,96 +59,127 @@ margin:auto;
 padding:15px;
 }
 
+/* 카드 */
+
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:12px;
+gap:14px;
 }
 
 .card{
-background:white;
-border-radius:16px;
+background:#fff0f6;
 padding:14px;
-box-shadow:0 6px 14px rgba(0,0,0,0.1);
-cursor:pointer;
-transition:0.2s;
+border-radius:20px;
 text-align:center;
+cursor:pointer;
+box-shadow:0 6px 14px rgba(0,0,0,0.1);
+transition:0.2s;
 }
 
 .card:hover{
-transform:translateY(-4px);
+transform:translateY(-5px);
 }
 
 .card img{
 width:100%;
 height:120px;
 object-fit:cover;
-border-radius:12px;
+border-radius:14px;
 margin-bottom:8px;
 }
 
-.dark .card{
-background:#2b2b2b;
-}
+/* 검색 */
 
 .search{
 width:100%;
-padding:10px;
-border-radius:12px;
-border:1px solid #ddd;
+padding:12px;
+border-radius:20px;
+border:none;
 margin-bottom:14px;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
 }
 
+/* 상세 */
+
 .detail{
-background:white;
+background:#fff0f6;
 padding:20px;
-border-radius:16px;
+border-radius:20px;
 box-shadow:0 6px 14px rgba(0,0,0,0.1);
 }
 
-.dark .detail{
-background:#2b2b2b;
-}
+/* 뒤로 */
 
 .back{
-margin-bottom:14px;
-background:#ff9966;
+background:#ff7fb4;
+margin-bottom:15px;
 }
 
-.musicFrame{
+/* 곰 애니메이션 */
+
+.bear{
+position:fixed;
+top:-50px;
+font-size:30px;
+animation:fall linear infinite;
+opacity:0.6;
+}
+
+@keyframes fall{
+0%{transform:translateY(-50px)}
+100%{transform:translateY(110vh)}
+}
+
+/* 숨김 iframe */
+
+.music{
 display:none;
 }
 
 </style>
 </head>
 <body>
-<header>🍞 빵 영양성분 사전</header>
+<header>🩷 빵 영양성분 사전</header>
 <div class="topbar">
 <button onclick="toggleDark()">🌙 다크모드</button>
-<button onclick="toggleMusic()">🎵 브금</button>
+<button onclick="playMusic()">🎵 브금</button>
 </div>
-<iframe class="musicFrame" id="music"
+<iframe class="music" id="music"
 src="https://www.youtube.com/embed/4xDzrJKXOOY?autoplay=1&loop=1"
 allow="autoplay">
 </iframe>
 <div class="container" id="app"></div>
 <script>
 
+/* 곰 비 생성 */
+
+for(let i=0;i<15;i++){
+const bear=document.createElement("div");
+bear.className="bear";
+bear.innerText="🧸";
+bear.style.left=Math.random()*100+"%";
+bear.style.animationDuration=(5+Math.random()*10)+"s";
+document.body.appendChild(bear);
+}
+
+/* 데이터 */
+
 const bakeries={
 
 "파리바게뜨":{
 
-"식빵":[
+"페스츄리":[
 {
-name:"우유식빵",
-img:"https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=600",
-amount:"100g",
-kcal:"210kcal",
-sodium:"260mg",
-sugar:"7g",
-fat:"3g",
-protein:"7g",
-allergy:"밀, 우유"
+name:"프렌치 크라상",
+img:"https://images.unsplash.com/photo-1555507036-ab794f57584a?w=600",
+amount:"70g",
+kcal:"240kcal",
+sodium:"230mg",
+sugar:"6g",
+fat:"8g",
+protein:"5g",
+allergy:"밀, 우유, 계란"
 }
 ],
 
@@ -157,21 +195,11 @@ fat:"10g",
 protein:"6g",
 allergy:"밀, 우유, 계란"
 }
-],
+]
 
-"건강빵":[
-{
-name:"호밀빵",
-img:"https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=600",
-amount:"90g",
-kcal:"190kcal",
-sodium:"200mg",
-sugar:"3g",
-fat:"2g",
-protein:"6g",
-allergy:"밀"
-}
-],
+},
+
+"뚜레쥬르":{
 
 "도넛":[
 {
@@ -185,52 +213,6 @@ fat:"12g",
 protein:"5g",
 allergy:"밀, 우유, 계란"
 }
-],
-
-"페스츄리":[
-{
-name:"프렌치 크라상",
-img:"https://images.unsplash.com/photo-1555507036-ab794f57584a?w=600",
-amount:"70g",
-kcal:"240kcal",
-sodium:"230mg",
-sugar:"6g",
-fat:"8g",
-protein:"5g",
-allergy:"밀, 우유, 계란"
-}
-]
-
-},
-
-"뚜레쥬르":{
-
-"식빵":[
-{
-name:"우유식빵",
-img:"https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=600",
-amount:"100g",
-kcal:"210kcal",
-sodium:"250mg",
-sugar:"7g",
-fat:"3g",
-protein:"7g",
-allergy:"밀, 우유"
-}
-],
-
-"간식빵":[
-{
-name:"단팥빵",
-img:"https://images.unsplash.com/photo-1599785209707-a456fc1337bb?w=600",
-amount:"90g",
-kcal:"300kcal",
-sodium:"270mg",
-sugar:"13g",
-fat:"8g",
-protein:"6g",
-allergy:"밀, 우유"
-}
 ]
 
 }
@@ -239,6 +221,8 @@ allergy:"밀, 우유"
 
 let currentBakery=null;
 let currentCategory=null;
+
+/* 빵집 */
 
 function showBakeries(){
 
@@ -249,9 +233,7 @@ Object.keys(bakeries).forEach(b=>{
 
 const div=document.createElement("div");
 div.className="card";
-
 div.innerHTML=`<h3>${b}</h3>`;
-
 div.onclick=()=>showCategories(b);
 
 app.appendChild(div);
@@ -259,6 +241,8 @@ app.appendChild(div);
 });
 
 }
+
+/* 카테고리 */
 
 function showCategories(b){
 
@@ -283,6 +267,8 @@ cat.appendChild(div);
 });
 
 }
+
+/* 빵목록 */
 
 function showBreads(c){
 
@@ -323,6 +309,8 @@ breadList.appendChild(div);
 
 }
 
+/* 검색 */
+
 function searchBread(text){
 
 const list=bakeries[currentBakery][currentCategory]
@@ -331,6 +319,8 @@ const list=bakeries[currentBakery][currentCategory]
 renderBreadList(list);
 
 }
+
+/* 상세 */
 
 function showDetail(b){
 
@@ -343,33 +333,29 @@ app.innerHTML=`
 
 <h2>${b.name}</h2>
 
-<p><b>내용량</b> : ${b.amount}</p>
-<p><b>칼로리</b> : ${b.kcal}</p>
-<p><b>나트륨</b> : ${b.sodium}</p>
-<p><b>당류</b> : ${b.sugar}</p>
-<p><b>포화지방</b> : ${b.fat}</p>
-<p><b>단백질</b> : ${b.protein}</p>
-<p><b>알레르기</b> : ${b.allergy}</p>
+<p>내용량 : ${b.amount}</p>
+<p>칼로리 : ${b.kcal}</p>
+<p>나트륨 : ${b.sodium}</p>
+<p>당류 : ${b.sugar}</p>
+<p>포화지방 : ${b.fat}</p>
+<p>단백질 : ${b.protein}</p>
+<p>알레르기 : ${b.allergy}</p>
 
 </div>
 `;
 
 }
 
+/* 다크모드 */
+
 function toggleDark(){
 document.body.classList.toggle("dark");
 }
 
-let musicOn=false;
+/* 브금 */
 
-function toggleMusic(){
-
-const music=document.getElementById("music");
-
-musicOn=!musicOn;
-
-music.style.display=musicOn?"block":"none";
-
+function playMusic(){
+document.getElementById("music").src+="&mute=0";
 }
 
 showBakeries();
