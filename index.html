@@ -155,14 +155,14 @@
 
     // 3. 눈내리는 효과 (리본, 하트, 반짝이 추가)
     const emojis = ["🧸","💗","💕","💖","✨","🍞","🥐"];
-    for (let i = 0; i < 40; i++)
-        const el = document.createElement("div");
-        el.className = "fall";
-        el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-        el.style.left = Math.random() * 100 + "%";
-        el.style.animationDuration = (6 + Math.random() * 10) + "s";
-        document.body.appendChild(el);
-    }
+for (let i = 0; i < 40; i++) {
+    const el = document.createElement("div");
+    el.className = "fall";
+    el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = Math.random() * 100 + "%";
+    el.style.animationDuration = (6 + Math.random() * 10) + "s";
+    document.body.appendChild(el);
+}
 
     // 4. 빵 데이터 생성
     function makeBread(name, tag, amount, kcal, sodium, sugar, fat, protein){
