@@ -154,7 +154,7 @@
 
         <header>🩷 빵 영양성분 사전</header>
 
-        <iframe id="music" class="musicFrame" src="" allow="autoplay"></iframe>
+     <iframe id="music" class="musicFrame" src="" allow="autoplay; encrypted-media"></iframe>
         <div class="container" id="app-container"></div>
     `;
     document.body.innerHTML = '';
@@ -174,11 +174,11 @@
     }
 
     // 4. 빵 데이터 생성
-    function makeBread(name, tag, amount, kcal, sodium, sugar, fat, protein){
+function makeBread(name, tag, amount, kcal, sodium, sugar, fat, protein){
  return{
   name,
   tag,
-  img.src = `https://picsum.photos/seed/${bread.name}/400/300`;
+  img:`https://picsum.photos/seed/${name}/400/300`,
   amount,
   kcal,
   sodium,
@@ -345,41 +345,21 @@ makeBread("글레이즈도넛","도넛","90g","310kcal","165mg","21g","12g","4g"
     const bgmList = [
 {
 title:"브금1",
-url:"https://www.youtube.com/embed/_YdFyzU8ryA?autoplay=1&loop=1&playlist=_YdFyzU8ryA"
+url:"https://www.youtube.com/embed/_YdFyzU8ryA?autoplay=1&mute=1&loop=1&playlist=_YdFyzU8ryA"
 },
 {
 title:"브금2",
-url:"https://www.youtube.com/embed/rFZLbFSyTyY?autoplay=1&loop=1&playlist=rFZLbFSyTyY"
+url:"https://www.youtube.com/embed/rFZLbFSyTyY?autoplay=1&mute=1&loop=1&playlist=rFZLbFSyTyY"
 },
 {
 title:"브금3",
-url:"https://www.youtube.com/embed/zGySl-_7fT0?autoplay=1&loop=1&playlist=zGySl-_7fT0"
+url:"https://www.youtube.com/embed/zGySl-_7fT0?autoplay=1&mute=1&loop=1&playlist=zGySl-_7fT0"
 }
 ];
 
 let currentBgmIndex = 0;
 let musicOn = false;
-let bgmFrame = null;
 
-function toggleMusic(){
-
-if(musicOn){
-
-if(bgmFrame) bgmFrame.remove();
-musicOn = false;
-
-}else{
-
-bgmFrame = document.createElement("iframe");
-bgmFrame.src = bgmList[currentBgmIndex].url;
-bgmFrame.style.display = "none";
-document.body.appendChild(bgmFrame);
-
-musicOn = true;
-
-}
-
-}
     window.breadApp.toggleMusic = function () {
         const music = document.getElementById("music");
         const btnPlay = document.getElementById("btn-play");
