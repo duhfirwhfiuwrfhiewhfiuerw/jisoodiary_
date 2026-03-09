@@ -343,13 +343,43 @@ makeBread("글레이즈도넛","도넛","90g","310kcal","165mg","21g","12g","4g"
 
     
     const bgmList = [
-        { title: "브금1", url: "https://www.youtube.com/embed/_YdFyzU8ryA?autoplay=1&loop=1" },
-        { title: "브금2", url: "https://www.youtube.com/embed/rFZLbFSyTyY?autoplay=1&loop=1" },
-        { title: "브금3", url: "https://www.youtube.com/embed/zGySl-_7fT0?autoplay=1&loop=1" }
-    ];
-    let currentBgmIndex = 0;
-    let musicOn = false;
+{
+title:"브금1",
+url:"https://www.youtube.com/embed/_YdFyzU8ryA?autoplay=1&loop=1&playlist=_YdFyzU8ryA"
+},
+{
+title:"브금2",
+url:"https://www.youtube.com/embed/rFZLbFSyTyY?autoplay=1&loop=1&playlist=rFZLbFSyTyY"
+},
+{
+title:"브금3",
+url:"https://www.youtube.com/embed/zGySl-_7fT0?autoplay=1&loop=1&playlist=zGySl-_7fT0"
+}
+];
 
+let currentBgmIndex = 0;
+let musicOn = false;
+let bgmFrame = null;
+
+function toggleMusic(){
+
+if(musicOn){
+
+if(bgmFrame) bgmFrame.remove();
+musicOn = false;
+
+}else{
+
+bgmFrame = document.createElement("iframe");
+bgmFrame.src = bgmList[currentBgmIndex].url;
+bgmFrame.style.display = "none";
+document.body.appendChild(bgmFrame);
+
+musicOn = true;
+
+}
+
+}
     window.breadApp.toggleMusic = function () {
         const music = document.getElementById("music");
         const btnPlay = document.getElementById("btn-play");
