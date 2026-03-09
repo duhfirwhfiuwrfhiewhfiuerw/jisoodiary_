@@ -2,196 +2,192 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>빵 영양성분 사전</title>
 </head>
 <body>
-
-<script src="script.js"></script>
-
-</body>
-</html>
+<script>
 (function () {
+    // 1. CSS 스타일 동적 주입
+    const style = document.createElement('style');
+    style.innerHTML = `
+        body { margin: 0; background-color: #f5f5f5; }
+        #app-wrapper {
+            width: 100%; max-width: 980px; margin: 0 auto; min-height: 100vh;
+            font-family: 'Pretendard', sans-serif; background: linear-gradient(135deg, #ffe1f0, #ffedf5);
+            color: #5b2c4a; overflow-x: hidden; transition: 0.4s; position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05); box-sizing: border-box;
+            padding-top: 10px;
+        }
+        #app-wrapper.dark { background: linear-gradient(135deg, #2b1b2a, #1a1118); color: #ffd3e6; }
+        
+        /* 헤더 스타일 */
+        #app-wrapper header { text-align: left; padding: 20px 20px 10px; font-size: 28px; font-weight: bold; color: #ff62a5; text-shadow: 2px 2px 0px #fff; }
+        #app-wrapper.dark header { text-shadow: 2px 2px 0px #4a2138; color: #ff8fc2; }
 
-const style = document.createElement('style');
-style.innerHTML = `
-body{margin:0;background:#f5f5f5;}
-#app-wrapper{
-max-width:980px;
-margin:0 auto;
-min-height:100vh;
-font-family:Pretendard,sans-serif;
-background:linear-gradient(135deg,#ffe1f0,#ffedf5);
-color:#5b2c4a;
-position:relative;
-overflow-x:hidden;
+        /* 🔥 우측 상단 위젯 영역 (다크모드 + BGM) 🔥 */
+        #widget-area {
+            position: absolute; top: 20px; right: 20px;
+            display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+            z-index: 100;
+        }
+
+        /* 귀여운 다크모드 버튼 */
+        .theme-btn { 
+            border: 2px solid #ffb6c1; padding: 6px 14px; border-radius: 20px; 
+            background: rgba(255, 255, 255, 0.8); color: #ff4fa0; font-weight: bold; 
+            cursor: pointer; font-size: 12px; backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(255, 182, 193, 0.4); transition: 0.2s; 
+        }
+        .theme-btn:hover { background: #fff0f7; transform: translateY(-2px); }
+        .theme-btn:active { transform: translateY(1px); box-shadow: 0 2px 5px rgba(255, 182, 193, 0.4); }
+        #app-wrapper.dark .theme-btn { background: #3a2435; border-color: #ff6fae; color: #ffd3e6; box-shadow: 0 4px 10px rgba(255, 111, 174, 0.3); }
+
+        /* 🔥 러블리 BGM 플레이어 스타일 🔥 */
+        #cy-player {
+            display: flex; align-items: center; justify-content: space-between; gap: 6px;
+            width: 220px; max-width: 100%;
+            background: #fff0f7; border: 2px dashed #ffb6c1; /* 귀여운 점선 테두리 */
+            padding: 6px 10px; border-radius: 25px; /* 동글동글한 알약 모양 */
+            box-shadow: 0 4px 12px rgba(255, 143, 194, 0.2);
+        }
+        #app-wrapper.dark #cy-player { background: #2b1b2a; border-color: #ff6fae; }
+        
+        
+        .cy-screen {
+            flex: 1; overflow: hidden; white-space: nowrap; position: relative;
+            background: #fff; border-radius: 12px; padding: 3px 8px; height: 16px;
+            display: flex; align-items: center;
+            box-shadow: inset 0 2px 4px rgba(255, 182, 193, 0.3); /* 살짝 파인 느낌 */
+        }
+        #app-wrapper.dark .cy-screen { background: #1a1118; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
+        
+        .cy-track { display: inline-block; white-space: nowrap; font-size: 11px; font-weight: bold; color: #ff4fa0; animation: textScroll 8s linear infinite; }
+        #app-wrapper.dark .cy-track { color: #ffb6c1; }
+        @keyframes textScroll {
+            0% { transform: translateX(120%); }
+            100% { transform: translateX(-120%); }
+        }
+        
+        /* 핑크빛 동그란 조작 버튼 */
+        .cy-controls { display: flex; gap: 5px; }
+        .cy-btn {
+            background: #ff8fc2; border: none; width: 24px; height: 24px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: white; font-size: 10px;
+            box-shadow: 0 2px 0 #d45a90; transition: 0.1s;
+        }
+        .cy-btn:active { transform: translateY(2px); box-shadow: none; }
+        #app-wrapper.dark .cy-btn { background: #ff6fae; box-shadow: 0 2px 0 #b84b82; }
+
+        /* 기존 빵집 UI 스타일들 */
+        #app-wrapper .container { padding: 15px; box-sizing: border-box; width: 100%; margin-top: 10px; }
+        #app-wrapper .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+        #app-wrapper .search { width: 100%; padding: 12px 20px; border-radius: 25px; border: 2px solid #ffe1f0; margin-bottom: 14px; box-shadow: 0 4px 10px rgba(255, 182, 193, 0.1); box-sizing: border-box; outline: none; font-family: inherit; transition: 0.3s; }
+        #app-wrapper .search:focus { border-color: #ff8fc2; }
+        #app-wrapper.dark .search { background: #3a2435; border-color: #5b2c4a; color: white; }
+        
+        #app-wrapper .back { background: #ff7fb7; margin-bottom: 15px; border: none; padding: 10px 18px; border-radius: 25px; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #d45a90; }
+        
+        #app-wrapper .card { background: #fff; padding: 14px; border-radius: 20px; text-align: center; cursor: pointer; box-shadow: 0 6px 14px rgba(255, 182, 193, 0.2); transition: 0.2s; border: 1px solid #fff0f7; }
+        #app-wrapper.dark .card { background: #3a2435; border-color: #4a2138; box-shadow: 0 6px 14px rgba(0,0,0,0.3); }
+        #app-wrapper .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255, 182, 193, 0.4); }
+        
+        #app-wrapper .tag-nav { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 5px; white-space: nowrap; }
+        #app-wrapper .tag-nav::-webkit-scrollbar { height: 6px; }
+        #app-wrapper .tag-nav::-webkit-scrollbar-thumb { background: #ffb6c1; border-radius: 10px; }
+        #app-wrapper .tag-btn { background: #fff; color: #ff8fc2; border: 2px solid #ffb6c1; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s; box-shadow: none; flex-shrink: 0; }
+        #app-wrapper.dark .tag-btn { background: #3a2435; border-color: #ff6fae; color: #ffd3e6; }
+        #app-wrapper .tag-btn.active { background: #ff8fc2; color: white; border-color: #ff8fc2; box-shadow: 0 4px 10px rgba(255, 143, 194, 0.4); }
+        #app-wrapper.dark .tag-btn.active { background: #ff6fae; color: #1a1118; border-color: #ff6fae; box-shadow: 0 4px 10px rgba(255, 111, 174, 0.4); }
+
+        /* 카드 반전 애니메이션 */
+        #app-wrapper .flip-card { background-color: transparent; height: 240px; perspective: 1000px; cursor: pointer; }
+        #app-wrapper .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; border-radius: 20px; box-shadow: 0 6px 14px rgba(255, 182, 193, 0.2); }
+        #app-wrapper .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        #app-wrapper .flip-card-front, #app-wrapper .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; padding: 14px; box-sizing: border-box; background: #fff; border: 1px solid #fff0f7; }
+        #app-wrapper.dark .flip-card-front, #app-wrapper.dark .flip-card-back { background: #3a2435; border-color: #4a2138; }
+        #app-wrapper .flip-card-front img { width: 100%; height: 130px; object-fit: cover; border-radius: 14px; margin-bottom: 8px; }
+        #app-wrapper .flip-card-back { transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 13px; line-height: 1.6; }
+        #app-wrapper .flip-card-back h4 { margin: 0 0 10px 0; color: #ff62a5; font-size: 15px; }
+        #app-wrapper.dark .flip-card-back h4 { color: #ff8fc2; }
+        #app-wrapper .flip-card-back p { margin: 2px 0; }
+
+        .fall { position: fixed; top: -50px; font-size: 24px; animation: fall linear infinite; opacity: 0.8; pointer-events: none; z-index: 9999; }
+        @keyframes fall { 0% { transform: translateY(-50px) rotate(0deg); } 100% { transform: translateY(110vh) rotate(360deg); } }
+        #app-wrapper .musicFrame { display: none; }
+
+        @media (max-width: 460px) {
+            #app-wrapper header { padding-top: 80px; font-size: 24px; text-align: center; } /* 모바일에선 위젯 안 겹치게 여백 추가 */
+            #widget-area { top: 15px; right: 15px; }
+        }
+        @media (min-width: 461px) and (max-width: 767px) {
+            #app-wrapper .container { padding: 30px; }
+            #app-wrapper .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+            #app-wrapper .flip-card { height: 260px; }
+        }
+        @media (min-width: 768px) {
+            #app-wrapper .container { padding: 40px; }
+            #app-wrapper .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+            #app-wrapper .flip-card { height: 280px; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 2. 앱 컨테이너 생성 (우측 상단 위젯 영역 추가)
+    const wrapper = document.createElement('div');
+    wrapper.id = 'app-wrapper';
+    wrapper.innerHTML = `
+        <div id="widget-area">
+            <button class="theme-btn" onclick="window.breadApp.toggleDark()">🌙 다크</button>
+            <div id="cy-player">
+                
+                <div class="cy-screen">
+                    <div class="cy-track" id="cy-title">▶ 재생버튼을 눌러주세요</div>
+                </div>
+                <div class="cy-controls">
+                    <button class="cy-btn" id="btn-play" onclick="window.breadApp.toggleMusic()">▶</button>
+                    <button class="cy-btn" id="btn-next" onclick="window.breadApp.nextMusic()">⏭</button>
+                </div>
+            </div>
+        </div>
+
+        <header>🩷 빵 영양성분 사전</header>
+
+        <iframe id="music" class="musicFrame" src="" allow="autoplay"></iframe>
+        <div class="container" id="app-container"></div>
+    `;
+    document.body.innerHTML = '';
+    document.body.appendChild(wrapper);
+
+    window.breadApp = {};
+
+    // 3. 눈내리는 효과 (리본, 하트, 반짝이 추가)
+    const emojis = ["🧸","💗","💕","💖","✨","🍞","🥐"];
+    for (let i = 0; i < 40; i++){
+        const el = document.createElement("div");
+        el.className = "fall";
+        el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = Math.random() * 100 + "%";
+        el.style.animationDuration = (6 + Math.random() * 10) + "s";
+        document.body.appendChild(el);
+    }
+
+    // 4. 빵 데이터 생성
+    function makeBread(name, tag, amount, kcal, sodium, sugar, fat, protein){
+ return{
+  name,
+  tag,
+  img:`https://source.unsplash.com/600x400/?${name},bread`,
+  amount,
+  kcal,
+  sodium,
+  sugar,
+  fat,
+  protein
+ }
 }
-#app-wrapper.dark{
-background:linear-gradient(135deg,#2b1b2a,#1a1118);
-color:#ffd3e6;
-}
-
-header{
-padding:20px;
-font-size:28px;
-font-weight:bold;
-color:#ff62a5;
-}
-
-.container{padding:20px;}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-gap:14px;
-}
-
-.card{
-background:#fff;
-padding:14px;
-border-radius:16px;
-text-align:center;
-cursor:pointer;
-box-shadow:0 6px 14px rgba(0,0,0,0.1);
-}
-
-.flip-card{
-height:240px;
-perspective:1000px;
-}
-
-.flip-card-inner{
-position:relative;
-width:100%;
-height:100%;
-transition:transform .6s;
-transform-style:preserve-3d;
-}
-
-.flip-card.flipped .flip-card-inner{
-transform:rotateY(180deg);
-}
-
-.flip-card-front,
-.flip-card-back{
-position:absolute;
-width:100%;
-height:100%;
-backface-visibility:hidden;
-border-radius:16px;
-background:#fff;
-padding:12px;
-box-sizing:border-box;
-}
-
-.flip-card-front img{
-width:100%;
-height:120px;
-object-fit:cover;
-border-radius:12px;
-}
-
-.flip-card-back{
-transform:rotateY(180deg);
-display:flex;
-flex-direction:column;
-justify-content:center;
-font-size:13px;
-}
-
-.tag-nav{
-display:flex;
-gap:8px;
-overflow-x:auto;
-margin-bottom:10px;
-}
-
-.tag-btn{
-padding:6px 12px;
-border-radius:20px;
-border:1px solid #ff8fc2;
-background:#fff;
-cursor:pointer;
-}
-
-.tag-btn.active{
-background:#ff8fc2;
-color:#fff;
-}
-
-.search{
-width:100%;
-padding:10px;
-border-radius:20px;
-border:1px solid #ffd1e8;
-margin-bottom:10px;
-}
-
-.back{
-padding:8px 14px;
-border:none;
-border-radius:20px;
-background:#ff7fb7;
-color:white;
-cursor:pointer;
-margin-bottom:10px;
-}
-
-.fall{
-position:fixed;
-top:-50px;
-font-size:24px;
-animation:fall linear infinite;
-opacity:.8;
-pointer-events:none;
-}
-
-@keyframes fall{
-0%{transform:translateY(-50px) rotate(0deg);}
-100%{transform:translateY(110vh) rotate(360deg);}
-}
-`;
-document.head.appendChild(style);
-
-const wrapper=document.createElement("div");
-wrapper.id="app-wrapper";
-wrapper.innerHTML=`
-<header>🩷 빵 영양성분 사전</header>
-<div class="container" id="app-container"></div>
-`;
-document.body.appendChild(wrapper);
-
-window.breadApp={};
-
-/* 눈 효과 */
-
-const emojis=["🧸","💗","💕","💖","✨","🍞","🥐"];
-
-for(let i=0;i<40;i++){
-const el=document.createElement("div");
-el.className="fall";
-el.innerText=emojis[Math.floor(Math.random()*emojis.length)];
-el.style.left=Math.random()*100+"%";
-el.style.animationDuration=(6+Math.random()*10)+"s";
-document.body.appendChild(el);
-}
-
-/* 빵 데이터 */
-
-function makeBread(name,tag,amount,kcal,sodium,sugar,fat,protein){
-return{
-name,
-tag,
-img:`https://source.unsplash.com/600x400/?bread`,
-amount,
-kcal,
-sodium,
-sugar,
-fat,
-protein
-}
-}
-
-const data={
+const data = {
 
 "파리바게뜨":[
 
@@ -199,16 +195,27 @@ makeBread("버터 크루아상","페스츄리","70g","290kcal","210mg","6g","16g
 makeBread("초코 크루아상","페스츄리","85g","340kcal","240mg","12g","18g","6g"),
 makeBread("아몬드 크루아상","페스츄리","90g","360kcal","230mg","10g","20g","7g"),
 makeBread("퀸아망","페스츄리","95g","420kcal","250mg","24g","22g","5g"),
+makeBread("뺑 오 쇼콜라","페스츄리","80g","330kcal","210mg","11g","17g","6g"),
 
 makeBread("소보로빵","간식빵","90g","315kcal","210mg","19g","11g","6g"),
 makeBread("단팥빵","간식빵","95g","300kcal","180mg","21g","6g","7g"),
 makeBread("슈크림빵","간식빵","100g","330kcal","190mg","20g","12g","6g"),
+makeBread("우유크림빵","간식빵","105g","340kcal","200mg","22g","13g","6g"),
+makeBread("딸기크림빵","간식빵","100g","335kcal","195mg","23g","12g","6g"),
+
+makeBread("초코크림빵","간식빵","105g","350kcal","210mg","25g","14g","6g"),
+makeBread("고구마빵","간식빵","110g","320kcal","170mg","18g","9g","6g"),
+makeBread("밤식빵","간식빵","120g","340kcal","190mg","20g","10g","7g"),
 
 makeBread("우유식빵","식빵","100g","265kcal","200mg","6g","5g","8g"),
 makeBread("통밀식빵","식빵","100g","250kcal","180mg","5g","4g","9g"),
+makeBread("곡물식빵","식빵","100g","255kcal","190mg","6g","5g","8g"),
+makeBread("허니식빵","식빵","110g","290kcal","210mg","14g","6g","7g"),
 
+makeBread("모찌도넛","도넛","90g","310kcal","170mg","18g","13g","5g"),
+makeBread("초코모찌도넛","도넛","95g","340kcal","180mg","22g","15g","5g"),
 makeBread("슈가도넛","도넛","85g","300kcal","160mg","20g","12g","4g"),
-makeBread("초코도넛","도넛","90g","330kcal","175mg","23g","14g","5g")
+makeBread("시나몬도넛","도넛","90g","320kcal","170mg","21g","13g","5g")
 
 ],
 
@@ -216,139 +223,173 @@ makeBread("초코도넛","도넛","90g","330kcal","175mg","23g","14g","5g")
 
 makeBread("버터 크루아상","페스츄리","72g","285kcal","200mg","6g","15g","5g"),
 makeBread("초코 크루아상","페스츄리","88g","345kcal","235mg","12g","18g","6g"),
+makeBread("아몬드 크루아상","페스츄리","92g","365kcal","230mg","11g","20g","7g"),
+makeBread("딸기 데니쉬","페스츄리","95g","350kcal","220mg","20g","17g","6g"),
+makeBread("애플 데니쉬","페스츄리","100g","355kcal","225mg","19g","18g","5g"),
+
+makeBread("치즈 데니쉬","페스츄리","98g","360kcal","240mg","12g","20g","7g"),
 
 makeBread("단팥빵","간식빵","95g","295kcal","180mg","20g","6g","7g"),
 makeBread("슈크림빵","간식빵","100g","325kcal","185mg","19g","11g","6g"),
+makeBread("소보로빵","간식빵","92g","310kcal","200mg","18g","10g","6g"),
+makeBread("고구마빵","간식빵","110g","315kcal","170mg","17g","9g","6g"),
+
+makeBread("밤크림빵","간식빵","105g","330kcal","190mg","21g","11g","6g"),
+makeBread("딸기크림빵","간식빵","100g","330kcal","195mg","22g","12g","6g"),
+makeBread("초코크림빵","간식빵","105g","345kcal","205mg","24g","13g","6g"),
 
 makeBread("우유식빵","식빵","100g","260kcal","195mg","6g","5g","8g"),
 makeBread("통밀식빵","식빵","100g","245kcal","175mg","5g","4g","9g"),
+makeBread("곡물식빵","식빵","100g","250kcal","185mg","6g","5g","8g"),
+makeBread("브리오슈 식빵","식빵","110g","300kcal","210mg","10g","9g","8g"),
 
 makeBread("슈가도넛","도넛","85g","295kcal","160mg","19g","12g","4g"),
-makeBread("초코도넛","도넛","90g","330kcal","175mg","23g","14g","5g")
+makeBread("초코도넛","도넛","90g","330kcal","175mg","23g","14g","5g"),
+makeBread("딸기도넛","도넛","88g","320kcal","170mg","22g","13g","5g"),
+makeBread("글레이즈도넛","도넛","90g","310kcal","165mg","21g","12g","4g")
 
 ]
 
 };
 
-let currentBakery=null;
-let currentFilterTag="전체";
-let currentSearchText="";
+    let currentBakery = null;
+    let currentFilterTag = "전체";
+    let currentSearchText = "";
 
-/* 빵집 목록 */
+  
+    window.breadApp.showBakeries = function () {
+        const app = document.getElementById("app-container");
+        app.innerHTML = "";
+        Object.keys(data).forEach(b => {
+            const div = document.createElement("div");
+            div.className = "card";
+            div.innerHTML = `<h2 style="color: #ff62a5;">${b}</h2><p style="font-size: 14px; color:gray;">(${data[b].length}개의 빵)</p>`;
+            div.onclick = () => window.breadApp.showBakery(b);
+            app.appendChild(div);
+        });
+    };
 
-window.breadApp.showBakeries=function(){
+    window.breadApp.showBakery = function (b) {
+        currentBakery = b;
+        currentFilterTag = "전체";
+        currentSearchText = "";
 
-const app=document.getElementById("app-container");
-app.innerHTML="";
+        const app = document.getElementById("app-container");
+        const tags = ["전체", ...new Set(data[b].map(item => item.tag))];
+        const tagsHtml = tags.map(t => `<button class="tag-btn ${t === '전체' ? 'active' : ''}" onclick="window.breadApp.setFilter('${t}')">${t}</button>`).join('');
 
-Object.keys(data).forEach(b=>{
+        app.innerHTML = `
+            <button class="back" onclick="window.breadApp.showBakeries()">⬅ 빵집 목록</button>
+            <div class="tag-nav" id="tagNav">${tagsHtml}</div>
+            <input class="search" placeholder="어떤 빵을 찾으시나요? 🔍" oninput="window.breadApp.searchBread(this.value)">
+            <div class="grid" id="breadList"></div>
+        `;
+        window.breadApp.updateBreadList();
+    };
 
-const div=document.createElement("div");
-div.className="card";
+    window.breadApp.setFilter = function (tag) {
+        currentFilterTag = tag;
+        document.querySelectorAll('.tag-btn').forEach(btn => {
+            if(btn.innerText === tag) btn.classList.add('active'); else btn.classList.remove('active');
+        });
+        window.breadApp.updateBreadList();
+    };
 
-div.innerHTML=`<h2>${b}</h2><p>${data[b].length}개의 빵</p>`;
+    window.breadApp.searchBread = function (text) {
+        currentSearchText = text; window.breadApp.updateBreadList();
+    };
 
-div.onclick=()=>window.breadApp.showBakery(b);
+    window.breadApp.updateBreadList = function () {
+        const breadList = document.getElementById("breadList");
+        breadList.innerHTML = "";
+        const list = data[currentBakery].filter(b => (currentFilterTag === "전체" || b.tag === currentFilterTag) && (b.name.includes(currentSearchText)));
 
-app.appendChild(div);
+        if (list.length === 0) {
+            breadList.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #ff8fc2; font-weight: bold;">검색 결과가 없어요 🥺</p>`; return;
+        }
 
-});
+        list.forEach(b => {
+            const div = document.createElement("div");
+            div.className = "flip-card";
+            div.innerHTML = `
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="${b.img}" loading="lazy" alt="빵 이미지">
+                        <b>${b.name}</b>
+                        <p style="font-size:12px; color:#ff8fc2; margin-top:5px; font-weight:bold;">#${b.tag}</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h4>${b.name}</h4>
+                        <p>🍞 ${b.amount}</p> <p>🔥 ${b.kcal}</p> <p>🧂 나트륨: ${b.sodium}</p>
+                        <p>🍬 당류: ${b.sugar}</p> <p>🧈 지방: ${b.fat}</p> <p>💪 단백질: ${b.protein}</p>
+                    </div>
+                </div>
+            `;
+            div.onclick = function() { this.classList.toggle('flipped'); };
+            breadList.appendChild(div);
+        });
+    };
 
-};
+    window.breadApp.toggleDark = function () { 
+        const wrapper = document.getElementById("app-wrapper");
+        wrapper.classList.toggle("dark"); 
+        const btn = document.querySelector(".theme-btn");
+        if(wrapper.classList.contains("dark")) {
+            btn.innerText = "☀️ 라이트";
+        } else {
+            btn.innerText = "🌙 다크";
+        }
+    };
 
-/* 빵 목록 */
+    
+    const bgmList = [
+        { title: "브금1", url: "https://www.youtube.com/embed/_YdFyzU8ryA?autoplay=1&loop=1" },
+        { title: "브금2", url: "https://www.youtube.com/embed/rFZLbFSyTyY?autoplay=1&loop=1" },
+        { title: "브금3", url: "https://www.youtube.com/embed/zGySl-_7fT0?autoplay=1&loop=1" }
+    ];
+    let currentBgmIndex = 0;
+    let musicOn = false;
 
-window.breadApp.showBakery=function(b){
+    window.breadApp.toggleMusic = function () {
+        const music = document.getElementById("music");
+        const btnPlay = document.getElementById("btn-play");
+        const trackTitle = document.getElementById("cy-title");
+        
+        if (!musicOn) {
+            music.src = bgmList[currentBgmIndex].url;
+            btnPlay.innerText = "❚❚"; // 정지 기호
+            trackTitle.innerText = `🎵 ${bgmList[currentBgmIndex].title} 🎵`;
+            trackTitle.style.animationPlayState = "running";
+        } else {
+            music.src = "";
+            btnPlay.innerText = "▶"; // 재생 기호
+            trackTitle.innerText = "▶ 재생버튼을 눌러주세요";
+            trackTitle.style.animationPlayState = "paused";
+        }
+        musicOn = !musicOn;
+    };
 
-currentBakery=b;
-currentFilterTag="전체";
-currentSearchText="";
+    window.breadApp.nextMusic = function () {
+        if (!musicOn) {
+            window.breadApp.toggleMusic();
+            return;
+        }
+        const music = document.getElementById("music");
+        const trackTitle = document.getElementById("cy-title");
+        
+        currentBgmIndex = (currentBgmIndex + 1) % bgmList.length; 
+        music.src = bgmList[currentBgmIndex].url;
+        trackTitle.innerText = `🎵 ${bgmList[currentBgmIndex].title} 🎵`;
+        
+        // 애니메이션 초기화
+        trackTitle.style.animation = 'none';
+        trackTitle.offsetHeight; 
+        trackTitle.style.animation = 'textScroll 8s linear infinite';
+    };
 
-const app=document.getElementById("app-container");
-
-const tags=["전체",...new Set(data[b].map(i=>i.tag))];
-
-const tagHTML=tags.map(t=>
-`<button class="tag-btn ${t==="전체"?"active":""}" onclick="breadApp.setFilter('${t}')">${t}</button>`
-).join("");
-
-app.innerHTML=`
-<button class="back" onclick="breadApp.showBakeries()">⬅ 뒤로</button>
-<div class="tag-nav">${tagHTML}</div>
-<input class="search" placeholder="빵 검색" oninput="breadApp.searchBread(this.value)">
-<div class="grid" id="breadList"></div>
-`;
-
-window.breadApp.updateBreadList();
-
-};
-
-window.breadApp.setFilter=function(tag){
-
-currentFilterTag=tag;
-
-document.querySelectorAll(".tag-btn").forEach(btn=>{
-btn.classList.toggle("active",btn.innerText===tag);
-});
-
-window.breadApp.updateBreadList();
-
-};
-
-window.breadApp.searchBread=function(text){
-
-currentSearchText=text;
-
-window.breadApp.updateBreadList();
-
-};
-
-window.breadApp.updateBreadList=function(){
-
-const breadList=document.getElementById("breadList");
-
-breadList.innerHTML="";
-
-const list=data[currentBakery].filter(b=>
-(currentFilterTag==="전체"||b.tag===currentFilterTag)&&
-b.name.includes(currentSearchText)
-);
-
-list.forEach(b=>{
-
-const div=document.createElement("div");
-div.className="flip-card";
-
-div.innerHTML=`
-<div class="flip-card-inner">
-<div class="flip-card-front">
-<img src="${b.img}">
-<b>${b.name}</b>
-<p>#${b.tag}</p>
-</div>
-
-<div class="flip-card-back">
-<h4>${b.name}</h4>
-<p>🍞 ${b.amount}</p>
-<p>🔥 ${b.kcal}</p>
-<p>🧂 ${b.sodium}</p>
-<p>🍬 ${b.sugar}</p>
-<p>🧈 ${b.fat}</p>
-<p>💪 ${b.protein}</p>
-</div>
-</div>
-`;
-
-div.onclick=function(){
-this.classList.toggle("flipped");
-};
-
-breadList.appendChild(div);
-
-});
-
-};
-
-window.breadApp.showBakeries();
-
-})();
+    // 초기 화면 실행
+    window.breadApp.showBakeries();
+})();=
+</script>
+</body>
+</html>
