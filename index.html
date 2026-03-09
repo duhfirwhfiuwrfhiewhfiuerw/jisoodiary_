@@ -359,15 +359,15 @@ makeBread("글레이즈도넛","도넛","90g","310kcal","165mg","21g","12g","4g"
 const bgmList = [
 {
 title:"브금1",
-url:"https://www.youtube.com/embed/_YdFyzU8ryA?autoplay=1&mute=1&loop=1&playlist=_YdFyzU8ryA"
+url:"https://www.youtube.com/embed/_YdFyzU8ryA?autoplay=1&mute=0&loop=1&playlist=_YdFyzU8ryA&playsinline=1"
 },
 {
 title:"브금2",
-url:"https://www.youtube.com/embed/rFZLbFSyTyY?autoplay=1&mute=1&loop=1&playlist=rFZLbFSyTyY"
+url:"https://www.youtube.com/embed/rFZLbFSyTyY?autoplay=1&mute=0&loop=1&playlist=rFZLbFSyTyY&playsinline=1"
 },
 {
 title:"브금3",
-url:"https://www.youtube.com/embed/zGySl-_7fT0?autoplay=1&mute=1&loop=1&playlist=zGySl-_7fT0"
+url:"https://www.youtube.com/embed/zGySl-_7fT0?autoplay=1&mute=0&loop=1&playlist=zGySl-_7fT0&playsinline=1"
 }
 ];
 let currentBgmIndex = 0;
@@ -379,7 +379,7 @@ let musicOn = false;
         const trackTitle = document.getElementById("cy-title");
         
         if (!musicOn) {
-            music.src = bgmList[currentBgmIndex].url.replace("mute=1","mute=0");
+            music.src = bgmList[currentBgmIndex].url;
             btnPlay.innerText = "❚❚"; // 정지 기호
             trackTitle.innerText = `🎵 ${bgmList[currentBgmIndex].title} 🎵`;
             trackTitle.style.animationPlayState = "running";
