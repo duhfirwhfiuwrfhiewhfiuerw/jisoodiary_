@@ -114,7 +114,7 @@
         #app-wrapper .flip-card-back p { margin: 2px 0; }
 
         .fall { position: fixed; top: -50px; font-size: 24px; animation: fall linear infinite; opacity: 0.8; pointer-events: none; z-index: 9999; }
-      @keyframes fall {
+    @keyframes fall{
 0% { transform: translateY(-50px) rotate(0deg); }
 100% { transform: translateY(110vh) rotate(360deg); }
 }
@@ -379,7 +379,7 @@ let musicOn = false;
         const trackTitle = document.getElementById("cy-title");
         
         if (!musicOn) {
-            music.src = bgmList[currentBgmIndex].url;
+            music.src = bgmList[currentBgmIndex].url.replace("mute=1","mute=0");
             btnPlay.innerText = "❚❚"; // 정지 기호
             trackTitle.innerText = `🎵 ${bgmList[currentBgmIndex].title} 🎵`;
             trackTitle.style.animationPlayState = "running";
