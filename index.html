@@ -165,73 +165,79 @@
     }
 
     // 4. 빵 데이터 생성
-    function makeBread(name, tag) {
-        return {
-            tag: tag, name: name,
-            img:`https://source.unsplash.com/600x400/?bread,${name}`
-            amount: "100g", kcal: "300kcal", sodium: "250mg", sugar: "15g", fat: "10g", protein: "6g", allergy: "밀, 우유, 계란"
-        };
-    }
+    function makeBread(name, tag, amount, kcal, sodium, sugar, fat, protein){
+ return{
+  name,
+  tag,
+  img:`https://source.unsplash.com/600x400/?${name},bread`,
+  amount,
+  kcal,
+  sodium,
+  sugar,
+  fat,
+  protein
+ }
+}
 const data = {
 
 "파리바게뜨":[
 
-makeBread("버터 크루아상","페스츄리"),
-makeBread("초코 크루아상","페스츄리"),
-makeBread("아몬드 크루아상","페스츄리"),
-makeBread("뺑 오 쇼콜라","페스츄리"),
-makeBread("퀸아망","페스츄리"),
-makeBread("애플파이","페스츄리"),
-makeBread("블루베리 데니쉬","페스츄리"),
-makeBread("치즈 데니쉬","페스츄리"),
+makeBread("버터 크루아상","페스츄리","70g","290kcal","210mg","6g","16g","5g"),
+makeBread("초코 크루아상","페스츄리","85g","340kcal","240mg","12g","18g","6g"),
+makeBread("아몬드 크루아상","페스츄리","90g","360kcal","230mg","10g","20g","7g"),
+makeBread("퀸아망","페스츄리","95g","420kcal","250mg","24g","22g","5g"),
+makeBread("뺑 오 쇼콜라","페스츄리","80g","330kcal","210mg","11g","17g","6g"),
 
-makeBread("소보로빵","간식빵"),
-makeBread("단팥빵","간식빵"),
-makeBread("슈크림빵","간식빵"),
-makeBread("우유크림빵","간식빵"),
-makeBread("딸기크림빵","간식빵"),
-makeBread("초코크림빵","간식빵"),
-makeBread("고구마빵","간식빵"),
-makeBread("밤식빵","간식빵"),
+makeBread("소보로빵","간식빵","90g","315kcal","210mg","19g","11g","6g"),
+makeBread("단팥빵","간식빵","95g","300kcal","180mg","21g","6g","7g"),
+makeBread("슈크림빵","간식빵","100g","330kcal","190mg","20g","12g","6g"),
+makeBread("우유크림빵","간식빵","105g","340kcal","200mg","22g","13g","6g"),
+makeBread("딸기크림빵","간식빵","100g","335kcal","195mg","23g","12g","6g"),
 
-makeBread("우유식빵","식빵"),
-makeBread("통밀식빵","식빵"),
-makeBread("곡물식빵","식빵"),
-makeBread("허니식빵","식빵"),
+makeBread("초코크림빵","간식빵","105g","350kcal","210mg","25g","14g","6g"),
+makeBread("고구마빵","간식빵","110g","320kcal","170mg","18g","9g","6g"),
+makeBread("밤식빵","간식빵","120g","340kcal","190mg","20g","10g","7g"),
 
-makeBread("모찌도넛","도넛"),
-makeBread("초코모찌도넛","도넛"),
-makeBread("슈가도넛","도넛"),
-makeBread("시나몬도넛","도넛")
+makeBread("우유식빵","식빵","100g","265kcal","200mg","6g","5g","8g"),
+makeBread("통밀식빵","식빵","100g","250kcal","180mg","5g","4g","9g"),
+makeBread("곡물식빵","식빵","100g","255kcal","190mg","6g","5g","8g"),
+makeBread("허니식빵","식빵","110g","290kcal","210mg","14g","6g","7g"),
+
+makeBread("모찌도넛","도넛","90g","310kcal","170mg","18g","13g","5g"),
+makeBread("초코모찌도넛","도넛","95g","340kcal","180mg","22g","15g","5g"),
+makeBread("슈가도넛","도넛","85g","300kcal","160mg","20g","12g","4g"),
+makeBread("시나몬도넛","도넛","90g","320kcal","170mg","21g","13g","5g")
 
 ],
 
 "뚜레쥬르":[
 
-makeBread("버터 크루아상","페스츄리"),
-makeBread("초코 크루아상","페스츄리"),
-makeBread("아몬드 크루아상","페스츄리"),
-makeBread("딸기 데니쉬","페스츄리"),
-makeBread("애플 데니쉬","페스츄리"),
-makeBread("치즈 데니쉬","페스츄리"),
+makeBread("버터 크루아상","페스츄리","72g","285kcal","200mg","6g","15g","5g"),
+makeBread("초코 크루아상","페스츄리","88g","345kcal","235mg","12g","18g","6g"),
+makeBread("아몬드 크루아상","페스츄리","92g","365kcal","230mg","11g","20g","7g"),
+makeBread("딸기 데니쉬","페스츄리","95g","350kcal","220mg","20g","17g","6g"),
+makeBread("애플 데니쉬","페스츄리","100g","355kcal","225mg","19g","18g","5g"),
 
-makeBread("단팥빵","간식빵"),
-makeBread("슈크림빵","간식빵"),
-makeBread("소보로빵","간식빵"),
-makeBread("고구마빵","간식빵"),
-makeBread("밤크림빵","간식빵"),
-makeBread("딸기크림빵","간식빵"),
-makeBread("초코크림빵","간식빵"),
+makeBread("치즈 데니쉬","페스츄리","98g","360kcal","240mg","12g","20g","7g"),
 
-makeBread("우유식빵","식빵"),
-makeBread("통밀식빵","식빵"),
-makeBread("곡물식빵","식빵"),
-makeBread("브리오슈 식빵","식빵"),
+makeBread("단팥빵","간식빵","95g","295kcal","180mg","20g","6g","7g"),
+makeBread("슈크림빵","간식빵","100g","325kcal","185mg","19g","11g","6g"),
+makeBread("소보로빵","간식빵","92g","310kcal","200mg","18g","10g","6g"),
+makeBread("고구마빵","간식빵","110g","315kcal","170mg","17g","9g","6g"),
 
-makeBread("슈가도넛","도넛"),
-makeBread("초코도넛","도넛"),
-makeBread("딸기도넛","도넛"),
-makeBread("글레이즈도넛","도넛")
+makeBread("밤크림빵","간식빵","105g","330kcal","190mg","21g","11g","6g"),
+makeBread("딸기크림빵","간식빵","100g","330kcal","195mg","22g","12g","6g"),
+makeBread("초코크림빵","간식빵","105g","345kcal","205mg","24g","13g","6g"),
+
+makeBread("우유식빵","식빵","100g","260kcal","195mg","6g","5g","8g"),
+makeBread("통밀식빵","식빵","100g","245kcal","175mg","5g","4g","9g"),
+makeBread("곡물식빵","식빵","100g","250kcal","185mg","6g","5g","8g"),
+makeBread("브리오슈 식빵","식빵","110g","300kcal","210mg","10g","9g","8g"),
+
+makeBread("슈가도넛","도넛","85g","295kcal","160mg","19g","12g","4g"),
+makeBread("초코도넛","도넛","90g","330kcal","175mg","23g","14g","5g"),
+makeBread("딸기도넛","도넛","88g","320kcal","170mg","22g","13g","5g"),
+makeBread("글레이즈도넛","도넛","90g","310kcal","165mg","21g","12g","4g")
 
 ]
 
