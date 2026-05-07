@@ -201,7 +201,7 @@ const mapData = {
         npcs: [],
         door: null, // handleInteraction에서 처리
         bounds: { minX: 20, maxX: 480, minY: 80, maxY: 460 }
-    }
+    },
     // mapData 객체 끝부분에 추가
     final_room: {
         bg: "https://i.imgur.com/CkXiP2Y.jpeg", 
@@ -278,12 +278,15 @@ function loadMap(mapName) {
     else if(mapName === "car_inside") { player.x = 380; player.y = 400; addText(messages.car_inside_welcome); }
     else if(mapName === "memory_1") { player.x = 250; player.y = 250; addText(messages.memory_1_msg); changeBGM("https://www.youtube.com/watch?v=_h19Sxm0YXQ", "sad_ending"); }
     else if(mapName === "memory_2") { player.x = 250; player.y = 250; addText(messages.memory_2_msg); }
-    else if(mapName === "memory_3") { player.x = 250; player.y = 250; addText("지수의 마지막 기억창고에 도착했어 1번째부터 차례대로 눌러보고 오른쪽문을 눌러줘"); } 
-// loadMap 함수 내부에 추가
     else if(mapName === "memory_3") { 
-        player.x = 250; player.y = 250; 
-        addText(messages.memory_3_msg); 
-    }
+
+    player.x = 250; 
+
+    player.y = 250; 
+
+    addText("지수의 마지막 기억창고에 도착했어! 위에서부터 차례대로 눌러봐"); 
+
+}
     else if(mapName === "final_room") { 
         player.x = 250; player.y = 250; 
         addText(messages.final_welcome); 
