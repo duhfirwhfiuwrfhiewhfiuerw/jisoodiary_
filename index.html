@@ -98,7 +98,13 @@ const messages = {
     phone: "매일 밤마다 전화하는게 소소한 행복이었어 작년엔 사람간에 통화하는게 나한텐 공포였고 힘들었는데 오빠덕분에 전화하는게 별거 아니라는걸 알게됐어. 싫어하는 마음에서 좋아진 마음으로 확 바꼈다고 해야할까? 쨋든 통화하는게 재밌어!",
     zombie: "좀비고 추천해준지 몇주 좀 넘은거 같은데 오빠가 이런 스토리있는 게임 좋아할줄 알았어 히히 혼자서 유튜브로 좀비고스토리 찾아본것도 귀엽더라. 괜찮아지면 나랑 꼭 좀비고 다시하기로 약속해! 우리 커플된지 얼마 안됐다구",
     glamping: "글램핑장 새로 오픈한 곳 갔었지? 내가 생각했던 그 감성은 아니었지만 글램핑장에서 고기구워먹고 한강라면 먹었던게 뭔가 여행온듯한 느낌이었어. 잠시 힐링할 수있어서 좋은 추억으로 남은 기억이야.",
-    memory_2_msg: "지수의 기억창고 2에 도착했어! 우리 추억을 더 구경해보고 오른쪽 문을 눌러줘."
+    memory_2_msg: "지수의 기억창고2에 도착했어! 더 구경해보고 오른쪽 문을 눌러줘."
+    m3_obj1: "기억창고 3의 첫 번째 추억 내용...",
+    m3_obj2: "두 번째 추억 내용...",
+    m3_obj3: "",
+    m3_obj4: "",
+    m3_obj5: "",
+    m3_obj6: ""
 };
 
 const mapData = {
@@ -177,10 +183,18 @@ const mapData = {
     },
     memory_3: {
         bg: "https://i.imgur.com/CkXiP2Y.jpeg", 
-        objects: [],
+        objects: [
+            // 6개의 오브젝트 슬롯 (이미지 주소 'img'란에 나중에 추가하세요)
+            { name: 'm3_obj1', x: 60, y: 80, w: 90, h: 90, img: "" },
+            { name: 'm3_obj2', x: 205, y: 80, w: 90, h: 90, img: "" },
+            { name: 'm3_obj3', x: 350, y: 80, w: 90, h: 90, img: "" },
+            { name: 'm3_obj4', x: 60, y: 340, w: 90, h: 90, img: "" },
+            { name: 'm3_obj5', x: 205, y: 340, w: 90, h: 90, img: "" },
+            { name: 'm3_obj6', x: 350, y: 340, w: 90, h: 90, img: "" }
+        ],
         npcs: [],
-        door: null,
-        bounds: { minX: 30, maxX: 470, minY: 100, maxY: 460 }
+        door: null, // handleInteraction에서 처리
+        bounds: { minX: 20, maxX: 480, minY: 80, maxY: 460 }
     }
 };
 
@@ -274,12 +288,28 @@ function handleInteraction(e) {
         return;
     }
 
-    if (currentMap === "memory_1" || currentMap === "memory_2") {
+    // ... 기존 handleInteraction 코드 내부 문 이동 부분 ...
+    if (currentMap === "memory_1" || currentMap === "memory_2" || currentMap === "memory_3") {
         if (clickX > 450 && clickY > 200 && clickY < 300) { 
-            const nextMap = (currentMap === "memory_1") ? "memory_2" : "memory_3";
-            const mapNum = (currentMap === "memory_1") ? "2" : "3";
-            showLoadingBar(`지수의 기억창고 ${mapNum}로 이동 중...`, 3000, nextMap);
-            return;
+            let nextMap = "";
+            let loadingMsg = "";
+
+            if (currentMap === "memory_1") {
+                nextMap = "memory_2";
+                loadingMsg = "지수의 기억창고 2로 이동 중...";
+            } else if (currentMap === "memory_2") {
+                nextMap = "memory_3";
+                loadingMsg = "지수의 기억창고 3로 이동 중...";
+            } else if (currentMap === "memory_3") {
+                // 마지막 방일 때의 처리 (예: 처음으로 돌아가거나 메시지 출력)
+                addText("모든 기억을 다 살펴봤어! 우리 앞으로 더 많은 추억 쌓자 ❤️");
+                return; 
+            }
+
+            if (nextMap) {
+                showLoadingBar(loadingMsg, 3000, nextMap);
+                return;
+            }
         }
     }
 
