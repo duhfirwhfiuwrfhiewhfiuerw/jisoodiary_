@@ -456,13 +456,18 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
-// 이미지 로딩 확인 후 게임 시작
 function startGame() {
+
     backgroundImg.onload = () => {
-        addText(messages.welcome);
-        draw(); 
+
+        draw();
+
     };
+
     loadMap("room");
+
+    addText(messages.welcome);
+
 }
 
 // 모든 리소스(폰트, 기본 이미지 등)가 로드된 후 실행
