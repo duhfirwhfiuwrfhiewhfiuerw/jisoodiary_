@@ -98,7 +98,7 @@ const messages = {
     phone: "매일 밤마다 전화하는게 소소한 행복이었어 작년엔 사람간에 통화하는게 나한텐 공포였고 힘들었는데 오빠덕분에 전화하는게 별거 아니라는걸 알게됐어. 싫어하는 마음에서 좋아진 마음으로 확 바꼈다고 해야할까? 쨋든 통화하는게 재밌어!",
     zombie: "좀비고 추천해준지 몇주 좀 넘은거 같은데 오빠가 이런 스토리있는 게임 좋아할줄 알았어 히히 혼자서 유튜브로 좀비고스토리 찾아본것도 귀엽더라. 괜찮아지면 나랑 꼭 좀비고 다시하기로 약속해! 우리 커플된지 얼마 안됐다구",
     glamping: "글램핑장 새로 오픈한 곳 갔었지? 내가 생각했던 그 감성은 아니었지만 글램핑장에서 고기구워먹고 한강라면 먹었던게 뭔가 여행온듯한 느낌이었어. 잠시 힐링할 수있어서 좋은 추억으로 남은 기억이야.",
-    memory_2_msg: "지수의 기억창고2에 도착했어! 더 구경해보고 오른쪽 문을 눌러줘."
+    memory_2_msg: "지수의 기억창고2에 도착했어! 더 구경해보고 오른쪽 문을 눌러줘.",
     m3_obj1: "기억창고 3의 첫 번째 추억 내용...",
     m3_obj2: "두 번째 추억 내용...",
     m3_obj3: "",
@@ -257,7 +257,9 @@ function loadMap(mapName) {
     else if(mapName === "car_inside") { player.x = 380; player.y = 400; addText(messages.car_inside_welcome); }
     else if(mapName === "memory_1") { player.x = 250; player.y = 250; addText(messages.memory_1_msg); changeBGM("https://www.youtube.com/watch?v=_h19Sxm0YXQ", "sad_ending"); }
     else if(mapName === "memory_2") { player.x = 250; player.y = 250; addText(messages.memory_2_msg); }
+    else if(mapName === "memory_3") { player.x = 250; player.y = 250; addText("지수의 마지막 기억창고에 도착했어 1번째부터 차례대로 눌러보고 오른쪽문을 눌러줘"); } 
 }
+
 
 function showLoadingBar(text, duration, targetMap) {
     const overlay = document.getElementById('loadingOverlay');
