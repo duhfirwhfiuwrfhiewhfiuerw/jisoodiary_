@@ -439,32 +439,57 @@ function handleInteraction(e) {
         if (clickX > obj.x && clickX < obj.x + obj.w && clickY > obj.y && clickY < obj.y + obj.h) targetObj = obj;
     });
 
-    if (targetObj) {
-        if (targetObj.name === "seat") {
-            player.x = targetObj.x + targetObj.w / 2;
-            player.y = targetObj.y + targetObj.h / 2;
-            addText(messages.seat);
-            showLoadingBar("수서역으로 가는 중...", 5000, "suseo_parking");
-            return;
-        }
-        if (targetObj.name === "car") {
-            addText(messages.car_msg);
-            showLoadingBar("차에 타는 중...", 3000, "car_inside");
-            return;
-        }
-        if (targetObj.name === "lunchbox") { addText(messages.car_lunchbox); return; }
+   if (targetObj) {
+
+    if (targetObj.name === "seat") {
+
+        player.x = targetObj.x + targetObj.w / 2;
+
+        player.y = targetObj.y + targetObj.h / 2;
+
+        addText(messages.seat);
+
+        showLoadingBar("수서역으로 가는 중...", 5000, "suseo_parking");
+
+        return;
+
     }
-   if (targetObj.name === "final_obj6") {
 
-    addText(messages.final_obj6);
+    if (targetObj.name === "car") {
 
-    setTimeout(() => {
+        addText(messages.car_msg);
 
-        showEndingCredit();
+        showLoadingBar("차에 타는 중...", 3000, "car_inside");
 
-    }, 3000);
+        return;
 
-    return;
+    }
+
+    if (targetObj.name === "lunchbox") {
+
+        addText(messages.car_lunchbox);
+
+        return;
+
+    }
+
+    // ⭐ 여기 안에 넣기!
+
+    if (targetObj.name === "final_obj6") {
+
+        addText(messages.final_obj6);
+
+        setTimeout(() => {
+
+            showEndingCredit();
+
+        }, 3000);
+
+        return;
+
+    }
+
+    addText(messages[targetObj.name]);
 
 }
     const door = mapData[currentMap].door;
