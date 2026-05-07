@@ -34,6 +34,79 @@
         #yt-player { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
         .msg-entry { margin-top: 12px; padding-top: 8px; border-top: 1px dashed #e8cfcf; position: relative; }
         .msg-entry:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+        #endingOverlay{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+    height:100%;
+
+    background:rgba(0,0,0,0);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    overflow:hidden;
+
+    z-index:9999;
+
+    transition:background 2s ease;
+
+}
+
+#creditText{
+
+    position:absolute;
+
+    bottom:-300px;
+
+    color:white;
+
+    font-size:24px;
+
+    text-align:center;
+
+    line-height:2.2;
+
+    animation:creditScroll 10s linear forwards;
+
+    white-space:pre-line;
+
+}
+
+@keyframes creditScroll{
+
+    0%{
+
+        bottom:-300px;
+
+        opacity:0;
+
+    }
+
+    10%{
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        bottom:100%;
+
+        opacity:1;
+
+    }
+
+}
     </style>
 </head>
 <body>
@@ -111,7 +184,8 @@ const messages = {
     final_obj3: "나는 오빠 말대로 화가 한번 나면 주체할수 없다고 하는거에 변명을 못하지만, 고칠수 있는 나이라고 생각해.",
     final_obj4: "더이상 상처를 주고싶지 않아. 아팠던 부분 건들일 생각도 없고, 나는 항상 오빠 옆에있으니까 조급하지 않아도 돼. 나를 다시 맞이할수있는 준비만 되면 된거야",
     final_obj5: "좋아해 많이. ",
-    final_obj6: "보고싶다."
+    final_obj6: "보고싶다.",
+    ending_credit: "끝까지 봐줘서 고마워 ❤️"
 };
 const mapData = {
     room: {
@@ -381,7 +455,19 @@ function handleInteraction(e) {
         if (targetObj.name === "lunchbox") { addText(messages.car_lunchbox); return; }
         addText(messages[targetObj.name]);
     }
+   if (targetObj.name === "final_obj6") {
 
+    addText(messages.final_obj6);
+
+    setTimeout(() => {
+
+        showEndingCredit();
+
+    }, 3000);
+
+    return;
+
+}
     const door = mapData[currentMap].door;
     if (door && clickX > door.x && clickX < door.x + door.w && clickY > door.y && clickY < door.y + door.h) {
         loadMap(door.target);
@@ -455,7 +541,37 @@ function draw() {
 
     requestAnimationFrame(draw);
 }
+function showEndingCredit(){
 
+    const overlay = document.getElementById('endingOverlay');
+
+    const credit = document.getElementById('creditText');
+
+    overlay.style.display = 'flex';
+
+    setTimeout(() => {
+
+        overlay.style.background = 'rgba(0,0,0,0.88)';
+
+        canvas.style.transition = 'opacity 2s ease';
+
+        canvas.style.opacity = '0.15';
+
+    }, 50);
+
+    credit.innerHTML = `
+
+        made by 지수 💗
+
+        
+
+        <br><br><br>
+
+        끝까지 봐줘서 고마워 ❤️
+
+    `;
+
+}
 function startGame() {
 
     backgroundImg.onload = () => {
@@ -477,5 +593,10 @@ if (document.readyState === 'complete') {
     window.addEventListener('load', startGame);
 }
 </script>
+<div id="endingOverlay">
+
+    <div id="creditText"></div>
+
+</div
 </body>
 </html> 
