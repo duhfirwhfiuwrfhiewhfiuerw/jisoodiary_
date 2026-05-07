@@ -104,9 +104,15 @@ const messages = {
     m3_obj3: "내가 기쁘게 해줄 수 있다는 생각과는 달리 한순간의 트라우마와 친한친구와의 멀어짐으로 인해 친구를 사귀고 의지하는게 점점 힘들어졌어. 그당시 엄마가 바쁘셔서 대신 나를 키워주셨던 외할머니의 부고소식과 부모님의 이혼사유 등등.. 점점 나의상처가 깊어져만 갔어",
     m3_obj4: "그래도 나라도 잘 지내봐야지 하고 중학생이 되자마자 친구들을 사귀어보려고 노력했어. 하지만 내 기대와는 다르게 초등학교때 나에관한 안좋은말들이 거짓말처럼 일부친구들에게 퍼져간 뒤라서 쉽게 사귈수가 없더라, 그래도 주연이랑 명서라는 날 이해해주는 친구들을 사귀게되었어.",
     m3_obj5: "사람간에 신뢰가 중요하다지만 나는 다른사람들과 다르게 그 사람이 하는말들을 잘 믿지 못하게 되었어. 이유를 듣는다고 한들 모든게 의심이 되었고 이사람도 결국 나를 배신하고 떠나겠지? 라는 생각의틀에 박혀서 인간관계가 원만하지 못했어. 많이 외롭기도했고",
-    m3_obj6: "나이를 점점 먹다보니 도저히 나아지는게 없고 오히려 나를 더 망치는 길 같아서 다시 회복하기위해 사람을 만나보자라고 마음을 굳게 먹었어. 하지만 옛날 그 버릇은 또 다시 생기고말았어"
+    m3_obj6: "나이를 점점 먹다보니 도저히 나아지는게 없고 오히려 나를 더 망치는 길 같아서 다시 회복하기위해 사람을 만나보자라고 마음을 굳게 먹었어. 하지만 옛날 그 버릇은 또 다시 생기고말았어",
+    final_welcome: "드디어 마지막 방이야. 오빠에게 하고 싶은 말들을 모아봤어.. Z방향 차례대로 눌러서 보면 돼. ",
+    final_obj1: "오빠 내가 많이 철없고 성숙하지 못한 나이라고 하지만 오빠한테만큼은 최선을 다하고싶어",
+    final_obj2: "지금당장 내가 했던 말을 기억에서 지워낼순 없겠지만 그 기억이 희미해질 수 있을만큼 노력하고싶어",
+    final_obj3: "나는 오빠 말대로 화가 한번 나면 주체할수 없다고 하는거에 변명을 못하지만, 고칠수 있는 나이라고 생각해.",
+    final_obj4: "더이상 상처를 주고싶지 않아. 아팠던 부분 건들일 생각도 없고, 나는 항상 오빠 옆에있으니까 조급하지 않아도 돼. 나를 다시 맞이할수있는 준비만 되면 된거야",
+    final_obj5: "좋아해 많이. ",
+    final_obj6: "보고싶다."
 };
-
 const mapData = {
     room: {
         bg: "https://i.imgur.com/bMfMr3n.png",
@@ -196,6 +202,21 @@ const mapData = {
         door: null, // handleInteraction에서 처리
         bounds: { minX: 20, maxX: 480, minY: 80, maxY: 460 }
     }
+    // mapData 객체 끝부분에 추가
+    final_room: {
+        bg: "https://i.imgur.com/CkXiP2Y.jpeg", 
+        objects: [
+            { name: 'final_obj1', x: 60, y: 80, w: 90, h: 90, img: "" }, // 이미지 링크를 따옴표 안에 넣어줘
+            { name: 'final_obj2', x: 205, y: 80, w: 90, h: 90, img: "" },
+            { name: 'final_obj3', x: 350, y: 80, w: 90, h: 90, img: "" },
+            { name: 'final_obj4', x: 60, y: 340, w: 90, h: 90, img: "" },
+            { name: 'final_obj5', x: 205, y: 340, w: 90, h: 90, img: "" },
+            { name: 'final_obj6', x: 350, y: 340, w: 90, h: 90, img: "" }
+        ],
+        npcs: [],
+        door: null, // 마지막 방이므로 문 없음
+        bounds: { minX: 20, maxX: 480, minY: 80, maxY: 460 }
+    }
 };
 
 const playerImages = { front: new Image(), back: new Image(), left: new Image(), right: new Image() };
@@ -258,6 +279,17 @@ function loadMap(mapName) {
     else if(mapName === "memory_1") { player.x = 250; player.y = 250; addText(messages.memory_1_msg); changeBGM("https://www.youtube.com/watch?v=_h19Sxm0YXQ", "sad_ending"); }
     else if(mapName === "memory_2") { player.x = 250; player.y = 250; addText(messages.memory_2_msg); }
     else if(mapName === "memory_3") { player.x = 250; player.y = 250; addText("지수의 마지막 기억창고에 도착했어 1번째부터 차례대로 눌러보고 오른쪽문을 눌러줘"); } 
+// loadMap 함수 내부에 추가
+    else if(mapName === "memory_3") { 
+        player.x = 250; player.y = 250; 
+        addText(messages.memory_3_msg); 
+    }
+    else if(mapName === "final_room") { 
+        player.x = 250; player.y = 250; 
+        addText(messages.final_welcome); 
+        // 필요하다면 여기서 마지막 방에 어울리는 BGM으로 변경 가능
+        // changeBGM("유튜브링크", "제목");
+    }
 }
 
 
@@ -291,6 +323,7 @@ function handleInteraction(e) {
     }
 
     // ... 기존 handleInteraction 코드 내부 문 이동 부분 ...
+    // handleInteraction 함수 내 문 이동 조건문 수정
     if (currentMap === "memory_1" || currentMap === "memory_2" || currentMap === "memory_3") {
         if (clickX > 450 && clickY > 200 && clickY < 300) { 
             let nextMap = "";
@@ -301,11 +334,10 @@ function handleInteraction(e) {
                 loadingMsg = "지수의 기억창고 2로 이동 중...";
             } else if (currentMap === "memory_2") {
                 nextMap = "memory_3";
-                loadingMsg = "지수의 기억창고 3로 이동 중...";
+                loadingMsg = "지수의 기억창고 3으로 이동 중...";
             } else if (currentMap === "memory_3") {
-                // 마지막 방일 때의 처리 (예: 처음으로 돌아가거나 메시지 출력)
-                addText("모든 기억을 다 살펴봤어! 우리 앞으로 더 많은 추억 쌓자 ❤️");
-                return; 
+                nextMap = "final_room"; // 마지막 방으로 연결
+                loadingMsg = "오빠에게 하고 싶은 말... 이동 중";
             }
 
             if (nextMap) {
