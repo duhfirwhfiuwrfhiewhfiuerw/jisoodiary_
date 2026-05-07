@@ -271,24 +271,29 @@ function loadMap(mapName) {
     isTransitioning = false;
     document.getElementById('loadingOverlay').style.display = 'none';
 
+    // 좌표 설정 및 메시지 출력
     if(mapName === "station") { player.x = 80; player.y = 420; }
     else if(mapName === "room") { player.x = 100; player.y = 300; }
-    else if(mapName === "srt_inside") { player.x = 250; player.y = 420; addText("열차 안에 들어왔어!"); setTimeout(() => addText(messages.hint_srt), 1000); }
+    else if(mapName === "srt_inside") { 
+        player.x = 250; player.y = 420; 
+        addText("열차 안에 들어왔어!"); 
+        setTimeout(() => addText(messages.hint_srt), 1000); 
+    }
     else if(mapName === "suseo_parking") { player.x = 100; player.y = 420; addText(messages.parking_msg); }
     else if(mapName === "car_inside") { player.x = 380; player.y = 400; addText(messages.car_inside_welcome); }
-    else if(mapName === "memory_1") { player.x = 250; player.y = 250; addText(messages.memory_1_msg); changeBGM("https://www.youtube.com/watch?v=_h19Sxm0YXQ", "sad_ending"); }
+    else if(mapName === "memory_1") { 
+        player.x = 250; player.y = 250; 
+        addText(messages.memory_1_msg); 
+        changeBGM("https://www.youtube.com/watch?v=_h19Sxm0YXQ", "sad_ending"); 
+    }
     else if(mapName === "memory_2") { player.x = 250; player.y = 250; addText(messages.memory_2_msg); }
-    else if(mapName === "memory_3") { player.x = 250; player.y = 250; addText("지수의 마지막 기억창고에 도착했어 1번째부터 차례대로 눌러보고 오른쪽문을 눌러줘"); } 
-// loadMap 함수 내부에 추가
     else if(mapName === "memory_3") { 
         player.x = 250; player.y = 250; 
-        addText(messages.memory_3_msg); 
+        addText(messages.m3_obj1); // memory_3 시작 메시지
     }
     else if(mapName === "final_room") { 
         player.x = 250; player.y = 250; 
         addText(messages.final_welcome); 
-        // 필요하다면 여기서 마지막 방에 어울리는 BGM으로 변경 가능
-        // changeBGM("유튜브링크", "제목");
     }
 }
 
@@ -322,30 +327,22 @@ function handleInteraction(e) {
         return;
     }
 
-    // ... 기존 handleInteraction 코드 내부 문 이동 부분 ...
-    // handleInteraction 함수 내 문 이동 조건문 수정
-    if (currentMap === "memory_1" || currentMap === "memory_2" || currentMap === "memory_3") {
-        if (clickX > 450 && clickY > 200 && clickY < 300) { 
-            let nextMap = "";
-            let loadingMsg = "";
+// handleInteraction 함수 내부에 이 부분을 확실히 확인하세요
+if (currentMap.startsWith("memory")) { // memory_1, 2, 3 모두 포함
+    if (clickX > 430) { // 범위를 450에서 430으로 조금 넓혔습니다.
+        let nextMap = "";
+        let loadingMsg = "";
 
-            if (currentMap === "memory_1") {
-                nextMap = "memory_2";
-                loadingMsg = "지수의 기억창고 2로 이동 중...";
-            } else if (currentMap === "memory_2") {
-                nextMap = "memory_3";
-                loadingMsg = "지수의 기억창고 3으로 이동 중...";
-            } else if (currentMap === "memory_3") {
-                nextMap = "final_room"; // 마지막 방으로 연결
-                loadingMsg = "오빠에게 하고 싶은 말... 이동 중";
-            }
+        if (currentMap === "memory_1") { nextMap = "memory_2"; loadingMsg = "지수의 기억창고 2로 이동 중..."; }
+        else if (currentMap === "memory_2") { nextMap = "memory_3"; loadingMsg = "지수의 기억창고 3으로 이동 중..."; }
+        else if (currentMap === "memory_3") { nextMap = "final_room"; loadingMsg = "마지막 방으로 이동 중..."; }
 
-            if (nextMap) {
-                showLoadingBar(loadingMsg, 3000, nextMap);
-                return;
-            }
+        if (nextMap) {
+            showLoadingBar(loadingMsg, 2000, nextMap);
+            return; // 이동 시 다른 로직 실행 방지
         }
     }
+}
 
     if (mapData[currentMap].npcs) {
         for (let npc of mapData[currentMap].npcs) {
