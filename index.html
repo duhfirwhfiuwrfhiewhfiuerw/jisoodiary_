@@ -32,6 +32,8 @@
         .music-player { margin-top: 10px; width: 95%; max-width: 500px; text-align: center; }
         .music-label { font-size: 12px; color: #e8cfcf; margin-bottom: 5px; }
         #yt-player { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+        .msg-entry { margin-top: 12px; padding-top: 8px; border-top: 1px dashed #e8cfcf; position: relative; }
+        .msg-entry:first-child { margin-top: 0; padding-top: 0; border-top: none; }
     </style>
 </head>
 <body>
@@ -39,7 +41,7 @@
 <div style="position: relative; width: 95%; max-width: 500px;">
     <canvas id="game"></canvas>
     <div id="loadingOverlay">
-        <div id="loadingText" style="font-size: 14px; color: #5a4f4f;">오빠한테 달려가는 중...</div>
+        <div id="loadingText" style="font-size: 14px; color: #5a4f4f;">이동 중...</div>
         <div style="width: 100%; background: #eee; border-radius: 5px; margin-top: 5px;">
             <div id="progressBar"></div>
         </div>
@@ -81,7 +83,22 @@ const messages = {
     car_msg: "이제 차를 타보자!",
     car_inside_welcome: "주차장에 주차해서 도시락을 먹으러왔어! 도시락이랑 형균을 클릭해보고, 다 먹었으면 맨 왼쪽을 클릭해줘!",
     car_oppa: "오빠가 도시락을 와구와구 먹는 모습이 너무 귀엽다.. 다음에도 만들어주고싶다! ❤️",
-    car_lunchbox: "도시락이 처음 가져왔던 거랑 비교해보면 모양이 망가져이따... 마음이 아프다 🍱"
+    car_lunchbox: "도시락이 처음 가져왔던 거랑 비교해보면 모양이 망가져이따... 마음이 아프다 🍱",
+    pepero: "고등학생때부터 빼빼로를 수제로 만들어서 나눠주는게 친구들 사이에서 유행이었는데 직접 만든걸 주고싶어진 이성은 오빠가 처음이었어. 아직도 오빠가 빼빼로하나씩 먹어보고 카톡으로 맛평가 해줬던게 기억나. 다음에는 오빠 취향에 맞춰서 더 잘만들 수 있을것같아!",
+    ski: "살면서 스키장은 쳐다도 안볼 것 같았는데 문득 숲방송보면서 나도 오빠랑 스키장에 놀러가고싶어져서 가자고했더니 오빠가 흔쾌히 알겠다고 해줘서 기분이 좋았어. 내가 잘 일어서지도 못하고 잘 못타다보니 답답했었는데 그래도 오빠랑 함께라서 재밌었어. ",
+    cablecar: "남산케이블카 탔었을때! 기다리는 줄은 많이 길었지만 그때 딱 저녁분위기가 감성타기 좋아서 그순간만큼은 내겐 좋은 추억으로 남은 기억이었어.",
+    kitty_cake: "오빠가 나를 위해 명동쪽 카페를 알아보다가 헬로키티카페가 있다길래 같이 갔었지? 그때 카페치고 웨이팅이 많았었는데 케이크 한입 먹자마자 보기좋은 떡이 맛도 좋다라는 말을 믿지않기로 해써.. 그래도 날 위해 이런 아기자기한 카페 데려와준게 감동이었어.",
+    tteokbokki: "내가 대차게 파워워킹 하고온 그날 숙소에서 엽떡 초보맛 시키고 떡볶이 떡 잘못 시켜서 대참사났던 날.. 나는 그날이 아직도 생생해.. 떡볶이 몇입 먹자마자 쓰러졌던 장면..ㅋㅋㅋㅋ",
+    aquarium: "첫만남에 아쿠아리움에 갔었어. 나는 그때 오빠랑 어색하기도하고 사진찍는게 부끄러워서 반응을 시원치않게 했었는데 오빠는 그게 아쿠아리움을 싫어하는 것 처럼 느껴졌었나바.. 처음 손 잡았던 날.. 부끄럽지만 설렜었어.",
+    memory_1_msg: "지수의 기억창고 1에 도착했어! 우리 소중한 추억들을 하나씩 클릭해보고 오른쪽문을 눌러줘.",
+    // 기억창고 2 문구들 (여기를 직접 수정하세요!)
+    fireworks: "오빠랑 공원에서 맥주캔까면서 봤던 예쁜 불꽃놀이! 가까이서 보진 못했지만 멀리서 봤을때도 예뻐서 영상으로 남겨놨었지. 소소했지만 오빠가 재밌게 구경하는 모습이 뿌듯해지는 느낌이었어. 오빠가 불꽃놀이 보던 것처럼 항상 밝았으면 좋겠다.",
+    cherry_blossom: "봄맞이를 오빠와 함께하게 되어서 기뻤어. 사실 남자친구랑 꽃구경하는게 내 인생 버킷리스트중 하나였거든. 그때 나 먼저 생각해주고 같이 보러가줘서 고마워 다음에도 기회가 된다면 같이 핑크뮬리도 보러가고싶다.",
+    fish: "내 인생 첫 방어...는 아니지만 나름 유명한 횟집에서 제철방어 먹을수있게되어 설렜어. 두툼하고 맛있더라구.. 근데 우리둘다 상태가 마니 안좋았었지?ㅠ 나라도 정신차리고 술덜마시고 오빠 케어해줬어야했는데 편의점가서 약사온다구 해도 말리구 ㅡ3ㅡ 담엔 아프면 꼭 나한테 말해",
+    phone: "매일 밤마다 전화하는게 소소한 행복이었어 작년엔 사람간에 통화하는게 나한텐 공포였고 힘들었는데 오빠덕분에 전화하는게 별거 아니라는걸 알게됐어. 싫어하는 마음에서 좋아진 마음으로 확 바꼈다고 해야할까? 쨋든 통화하는게 재밌어!",
+    zombie: "좀비고 추천해준지 몇주 좀 넘은거 같은데 오빠가 이런 스토리있는 게임 좋아할줄 알았어 히히 혼자서 유튜브로 좀비고스토리 찾아본것도 귀엽더라. 괜찮아지면 나랑 꼭 좀비고 다시하기로 약속해! 우리 커플된지 얼마 안됐다구",
+    glamping: "글램핑장 새로 오픈한 곳 갔었지? 내가 생각했던 그 감성은 아니었지만 글램핑장에서 고기구워먹고 한강라면 먹었던게 뭔가 여행온듯한 느낌이었어. 잠시 힐링할 수있어서 좋은 추억으로 남은 기억이야.",
+    memory_2_msg: "지수의 기억창고 2에 도착했어! 우리 추억을 더 구경해보고 오른쪽 문을 눌러줘."
 };
 
 const mapData = {
@@ -96,7 +113,7 @@ const mapData = {
             { name: 'bath', x: 380, y: 340, w: 90, h: 90, img: "https://i.imgur.com/viVc6C0.png" }
         ],
         npcs: [],
-        door: { x: 450, y: 150, w: 50, h: 200, target: "station" }, // 문 위치 조정
+        door: { x: 450, y: 150, w: 50, h: 200, target: "station" },
         bounds: { minX: 20, maxX: 480, minY: 150, maxY: 450 }
     },
     station: {
@@ -111,41 +128,59 @@ const mapData = {
     },
     srt_inside: {
         bg: "https://i.imgur.com/ivq7UoM.jpeg", 
-        objects: [
-            { name: 'seat', x: 310, y: 150, w: 80, h: 100, img: "" } 
-        ],
+        objects: [{ name: 'seat', x: 310, y: 150, w: 80, h: 100, img: "" }],
         npcs: [],
         door: null,
         bounds: { minX: 50, maxX: 450, minY: 50, maxY: 450 }
     },
     suseo_parking: {
         bg: "https://i.imgur.com/uYcIJkq.jpeg", 
-        objects: [
-            { name: 'car', x: 215, y: 180, w: 55, h: 130, img: "" } 
-        ],
-        npcs: [
-            { name: '형균', x: 170, y: 220, w: 40, h: 70 } 
-        ],
+        objects: [{ name: 'car', x: 215, y: 180, w: 55, h: 130, img: "" }],
+        npcs: [{ name: '형균', x: 170, y: 220, w: 40, h: 70 }],
         door: null,
         bounds: { minX: 20, maxX: 480, minY: 180, maxY: 480 }
     },
     car_inside: {
         bg: "https://i.imgur.com/OyvVFZN.jpeg", 
-        objects: [
-            { name: 'lunchbox', x: 280, y: 270, w: 80, h: 80, img: "" }
-        ],
-        npcs: [
-            { name: '형균', x: 175, y: 280, w: 70, h: 80 }
-        ],
+        objects: [{ name: 'lunchbox', x: 280, y: 270, w: 80, h: 80, img: "" }],
+        npcs: [{ name: '형균', x: 175, y: 280, w: 70, h: 80 }],
         door: null,
         bounds: { minX: 10, maxX: 490, minY: 180, maxY: 450 }
     },
-    restaurant: {
-        bg: "https://via.placeholder.com/500x500.png?text=Restaurant+Scene", 
+    memory_1: {
+        bg: "https://i.imgur.com/CkXiP2Y.jpeg", 
+        objects: [
+            { name: 'pepero', x: 60, y: 80, w: 90, h: 90, img: "https://i.imgur.com/7szuOiR.png" },
+            { name: 'ski', x: 205, y: 80, w: 90, h: 90, img: "https://i.imgur.com/UFQlxVr.png" },
+            { name: 'cablecar', x: 350, y: 80, w: 90, h: 90, img: "https://i.imgur.com/GGQc1tV.png" },
+            { name: 'kitty_cake', x: 60, y: 340, w: 90, h: 90, img: "https://i.imgur.com/ln4ZU74.png" },
+            { name: 'tteokbokki', x: 205, y: 340, w: 90, h: 90, img: "https://i.imgur.com/uhmDqcp.png" },
+            { name: 'aquarium', x: 350, y: 340, w: 90, h: 90, img: "https://i.imgur.com/9Xir0W9.png" }
+        ],
+        npcs: [],
+        door: null,
+        bounds: { minX: 20, maxX: 480, minY: 80, maxY: 460 }
+    },
+    memory_2: {
+        bg: "https://i.imgur.com/CkXiP2Y.jpeg", 
+        objects: [
+            { name: 'fireworks', x: 60, y: 80, w: 90, h: 90, img: "https://i.imgur.com/FSHcmEu.png" },
+            { name: 'cherry_blossom', x: 205, y: 80, w: 90, h: 90, img: "https://i.imgur.com/yncn9So.png" },
+            { name: 'fish', x: 350, y: 80, w: 90, h: 90, img: "https://i.imgur.com/LFWJbqG.png" },
+            { name: 'phone', x: 60, y: 340, w: 90, h: 90, img: "https://i.imgur.com/dVOY20i.png" },
+            { name: 'zombie', x: 205, y: 340, w: 90, h: 90, img: "https://i.imgur.com/fq2bQv4.png" },
+            { name: 'glamping', x: 350, y: 340, w: 90, h: 90, img: "https://i.imgur.com/aZLTmZC.png" }
+        ],
+        npcs: [],
+        door: null, // handleInteraction에서 특수 처리
+        bounds: { minX: 20, maxX: 480, minY: 80, maxY: 460 }
+    },
+    memory_3: {
+        bg: "https://i.imgur.com/CkXiP2Y.jpeg", 
         objects: [],
         npcs: [],
         door: null,
-        bounds: { minX: 50, maxX: 450, minY: 50, maxY: 450 }
+        bounds: { minX: 30, maxX: 470, minY: 100, maxY: 460 }
     }
 };
 
@@ -186,6 +221,14 @@ function addText(text) {
     }, 25);
 }
 
+function changeBGM(url, title) {
+    const p = document.getElementById('yt-player');
+    const label = document.querySelector('.music-label');
+    const videoId = url.split('v=')[1].split('?')[0].split('&')[0];
+    p.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1`;
+    label.innerText = `Now Playing: ${title} 🎵`;
+}
+
 function loadMap(mapName) {
     if (!mapData[mapName]) return;
     currentMap = mapName;
@@ -194,26 +237,25 @@ function loadMap(mapName) {
     document.getElementById('loadingOverlay').style.display = 'none';
 
     if(mapName === "station") { player.x = 80; player.y = 420; }
-    else if(mapName === "room") { player.x = 100; player.y = 300; } // 시작 위치 조정
+    else if(mapName === "room") { player.x = 100; player.y = 300; }
     else if(mapName === "srt_inside") { player.x = 250; player.y = 420; addText("열차 안에 들어왔어!"); setTimeout(() => addText(messages.hint_srt), 1000); }
     else if(mapName === "suseo_parking") { player.x = 100; player.y = 420; addText(messages.parking_msg); }
-    else if(mapName === "car_inside") { player.x = 250; player.y = 400; addText(messages.car_inside_welcome); }
-    else if(mapName === "restaurant") { player.x = 250; player.y = 400; addText("배고프다! 맛있는 거 먹으러 가자! 🍲"); }
+    else if(mapName === "car_inside") { player.x = 380; player.y = 400; addText(messages.car_inside_welcome); }
+    else if(mapName === "memory_1") { player.x = 250; player.y = 250; addText(messages.memory_1_msg); changeBGM("https://www.youtube.com/watch?v=_h19Sxm0YXQ", "sad_ending"); }
+    else if(mapName === "memory_2") { player.x = 250; player.y = 250; addText(messages.memory_2_msg); }
 }
 
 function showLoadingBar(text, duration, targetMap) {
     const overlay = document.getElementById('loadingOverlay');
     const bar = document.getElementById('progressBar');
-    const loadingText = document.getElementById('loadingText');
-    loadingText.innerText = text;
+    document.getElementById('loadingText').innerText = text;
     overlay.style.display = 'block';
     isTransitioning = true;
     let width = 0;
-    const step = 100 / (duration / 100);
     const interval = setInterval(() => {
         if (width >= 100) { clearInterval(interval); loadMap(targetMap); }
-        else { width += step; bar.style.width = width + '%'; }
-    }, 100);
+        else { width += 1; bar.style.width = width + '%'; }
+    }, duration / 100);
 }
 
 function handleInteraction(e) {
@@ -227,13 +269,20 @@ function handleInteraction(e) {
     const clickX = (clientX - rect.left) * scaleX;
     const clickY = (clientY - rect.top) * scaleY;
 
-    // 카 안에서 왼쪽 클릭 시 이동
     if (currentMap === "car_inside" && clickX < 60) {
-        showLoadingBar("식당으로 이동 중...", 3000, "restaurant");
+        showLoadingBar("지수의 기억창고 1로 이동 중...", 3000, "memory_1");
         return;
     }
 
-    // NPC 클릭
+    if (currentMap === "memory_1" || currentMap === "memory_2") {
+        if (clickX > 450 && clickY > 200 && clickY < 300) { 
+            const nextMap = (currentMap === "memory_1") ? "memory_2" : "memory_3";
+            const mapNum = (currentMap === "memory_1") ? "2" : "3";
+            showLoadingBar(`지수의 기억창고 ${mapNum}로 이동 중...`, 3000, nextMap);
+            return;
+        }
+    }
+
     if (mapData[currentMap].npcs) {
         for (let npc of mapData[currentMap].npcs) {
             if (clickX > npc.x && clickX < npc.x + npc.w && clickY > npc.y && clickY < npc.y + npc.h) {
@@ -244,7 +293,6 @@ function handleInteraction(e) {
         }
     }
 
-    // 오브젝트 클릭
     let targetObj = null;
     mapData[currentMap].objects.forEach(obj => {
         if (clickX > obj.x && clickX < obj.x + obj.w && clickY > obj.y && clickY < obj.y + obj.h) targetObj = obj;
@@ -267,7 +315,6 @@ function handleInteraction(e) {
         addText(messages[targetObj.name]);
     }
 
-    // 캐릭터 이동 및 문 이동 체크
     const door = mapData[currentMap].door;
     if (door && clickX > door.x && clickX < door.x + door.w && clickY > door.y && clickY < door.y + door.h) {
         loadMap(door.target);
@@ -293,18 +340,14 @@ function handleInteraction(e) {
         !checkCollision(nextX, nextY)) {
         player.x = nextX;
         player.y = nextY;
-        
-        // 오른쪽 끝 도달 시 자동 맵 전환 (방에서 정거장으로)
-        if (currentMap === "room" && player.x > 450) {
-            loadMap("station");
-        }
+        if (currentMap === "room" && player.x > 450) loadMap("station");
     }
 }
 
 function checkCollision(nx, ny) {
     const objects = mapData[currentMap].objects;
     for (let obj of objects) {
-        if (nx > obj.x - 10 && nx < obj.x + obj.w + 10 &&
+        if (obj.img && nx > obj.x - 10 && nx < obj.x + obj.w + 10 &&
             ny > obj.y - 10 && ny < obj.y + obj.h + 10) return true;
     }
     return false;
@@ -316,19 +359,20 @@ canvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleInterac
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (backgroundImg.complete) ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
-    
     mapData[currentMap].objects.forEach(obj => {
         if (obj.imgObj && obj.imgObj.complete) ctx.drawImage(obj.imgObj, obj.x, obj.y, obj.w, obj.h);
     });
 
     if (mapData[currentMap].npcs) {
         mapData[currentMap].npcs.forEach(npc => {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
-            ctx.fillRect(npc.x + npc.w/2 - 25, npc.y - 25, 50, 18);
-            ctx.fillStyle = "#ffeb3b";
-            ctx.font = "14px 'DungGeunMo'";
-            ctx.textAlign = "center";
-            ctx.fillText(npc.name, npc.x + npc.w/2, npc.y - 11);
+            if (!currentMap.startsWith("memory")) {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+                ctx.fillRect(npc.x + npc.w/2 - 25, npc.y - 25, 50, 18);
+                ctx.fillStyle = "#ffeb3b";
+                ctx.font = "14px 'DungGeunMo'";
+                ctx.textAlign = "center";
+                ctx.fillText(npc.name, npc.x + npc.w/2, npc.y - 11);
+            }
         });
     }
 
@@ -348,4 +392,4 @@ function draw() {
 window.onload = () => { loadMap("room"); addText(messages.welcome); draw(); };
 </script>
 </body>
-</html>
+</html> 
